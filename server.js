@@ -65,7 +65,7 @@ if (!config.secretSession || config.secretSession === '') {
 
 app.enable('trust proxy');
 app.use(helmet());
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3001);
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(config.secretCookie));

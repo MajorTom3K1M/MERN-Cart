@@ -1,0 +1,46 @@
+.sidebar-sm {
+    -moz-transition: all 200ms ease-out;
+    -webkit-transition: all 200ms ease-out;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.1);
+    display: block;
+    float: left;
+    height: 100%;
+    overflow-y: auto;
+    position: fixed;
+    transition: all 200ms ease-out;
+    width: 240px;
+}
+
+.sidebar-sm > ul > li > a > svg {
+    margin-left: 3px;
+    margin-right: 20px;
+    width: 20px;
+    color: #4a5869;
+    margin-top: auto;
+    margin-bottom: auto;
+    /* text-align: center; */
+}
+
+.sidebar-sm-heading {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.nav-link {
+    display: block;
+    padding: .5rem 1rem;
+}
+
+.logo-n , .logo-sm {
+    color: #2a323c !important;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    line-height: 70px;
+}
+
+.logo-n span, .logo-sm span {
+    color: #3292e0;
+    font-family: 'Crete Round', serif;
+}

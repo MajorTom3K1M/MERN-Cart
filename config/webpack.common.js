@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const helpers = require('./helpers');
@@ -37,31 +38,37 @@ module.exports = {
         loader: 'babel-loader'
       },
 
+      // CSS files
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+
       // SCSS files
       {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                'sourceMap': true,
-                'importLoaders': 1
-              }
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                autoprefixer
+              ]
+            }
+          },
+          // Compiles Sass to CSS
+          {
+            loader: 'sass-loader',
+            options: {
+              // Prefer `dart-sass`
+              implementation: require('sass'),
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: () => [
-                  autoprefixer
-                ]
-              }
-            },
-            'sass-loader'
-          ]
-        })
-      }
+          },
+        ],
+      },
     ]
   },
 
