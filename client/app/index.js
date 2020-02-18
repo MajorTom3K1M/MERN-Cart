@@ -13,6 +13,7 @@ import './assets/scss/paper-dashboard.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/sidebar.css';
 import './assets/css/navbar.css';
+import './assets/css/styles.css';
 import './assets/demo/demo.css';
 
 // routes

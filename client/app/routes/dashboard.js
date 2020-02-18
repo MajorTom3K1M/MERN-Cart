@@ -1,5 +1,5 @@
 import React from "react";
-import Dashboard from '../views/Dashboard';
+import Dashboard from '../views/Dashboard/Dashboard';
 import * as Icon from 'react-feather';
 
 var dashRoutes = [

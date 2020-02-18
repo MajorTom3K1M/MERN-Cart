@@ -16,8 +16,12 @@ import {
     InputGroupText,
     InputGroupAddon,
     Input,
-    FormGroup
+    FormGroup,
+    Button
 } from "reactstrap";
+
+// Icon
+import { Menu } from 'react-feather';
 
 // import routes
 import dashboardRoutes from '../../routes/dashboard';
@@ -74,7 +78,7 @@ class Header extends Component {
     render() {
         return (
             <Navbar
-                color="dark"
+                // color="dark"
                 expand="lg"
                 className="navbar-default"
             >
@@ -85,30 +89,28 @@ class Header extends Component {
                                 type="button"
                                 ref="sidebarToggle"
                                 className="navbar-toggler"
-                                // onClick={() => this.openSidebar()}
+                            // onClick={() => this.openSidebar()}
                             >
                                 <span className="navbar-toggler-bar bar1" />
                                 <span className="navbar-toggler-bar bar2" />
                                 <span className="navbar-toggler-bar bar3" />
                             </button>
                         </div>
-                        
+
                     </div>
                     <Collapse
                         isOpen={this.state.isOpen}
                         navbar
                         className="justify-content-start"
                     >
-                        <FormGroup>
-                            <InputGroup className="no-border">
-                                <Input placeholder="Search..." />
-                                <InputGroupAddon addonType="append">
-                                    <InputGroupText>
-                                        <i className="nc-icon nc-zoom-split" />
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                            </InputGroup>
-                        </FormGroup>
+                        <Button className="button-menu-mobile"><Menu size="22px"/></Button>
+                        <form>
+                            <FormGroup>
+                                <InputGroup>
+                                    <Input placeholder="Search..." className="search-bar" />
+                                </InputGroup>
+                            </FormGroup>
+                        </form>
                     </Collapse>
                 </Container>
             </Navbar>

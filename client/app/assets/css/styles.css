@@ -1,0 +1,38 @@
+.number {
+    font-weight: 500;
+    font-size: 40px;
+    color: tomato;
+}
+
+.number-icon {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.page-header-title {
+    background-color: #2a323c;
+    margin: -70px -30px 23px -30px;
+    padding: 10px 15px 100px 20px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.page-header-title .page-title {
+    margin-bottom: 12px;
+    color: #ffffff;
+    font-size: 22px;
+}
+
+.page-content-wrapper {
+    margin-top: -100px;
+}
+
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: inherit;
+}
+
+.text-muted {
+    color: #777;
+}

@@ -1035,14 +1035,15 @@ fieldset[disabled]
 .no-caret.dropdown-toggle::after {
   display: none; }
 
+//#9A9A9A
 ::-moz-placeholder {
-  color: #9A9A9A; }
+  color: rgb(255, 255, 255); }
 
 :-ms-input-placeholder {
-  color: #9A9A9A; }
+  color: rgb(255, 255, 255);; }
 
 ::-webkit-input-placeholder {
-  color: #9A9A9A; }
+  color: rgb(255, 255, 255);; }
 
 select.form-control:not([size]):not([multiple]) {
   height: calc(2.25rem + 4px); }
@@ -3523,8 +3524,9 @@ License - nucleoapp.com/license/
   transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1); }
   .main-panel > .content {
     padding: 0 30px 30px;
-    min-height: calc(100vh - 123px);
-    margin-top: 93px; }
+    min-height: calc(100vh - 70px);
+    margin-top: 70px; 
+  }
   .main-panel > .navbar {
     margin-bottom: 0; }
   .main-panel .header {

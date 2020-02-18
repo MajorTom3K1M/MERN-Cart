@@ -1,5 +1,11 @@
+.navbar {
+    padding: 0;
+}
+
 .navbar-default {
     height: 70px;
+    background-color: #2a323c !important;
+    /* color: #2a323c !important; */
 }
 
 .navbar-form {
@@ -15,10 +21,28 @@
     color: #ffffff;
     font-size: 14px;
     height: 42px;
-    margin-top: 6px;
+    /* margin-top: 6px; */
     margin-left: 15px;
     border-radius: 30px;
-    padding-left: 20px;
+    padding-left: 20px !important;
+}
+
+.form-control::placeholder {
+    color: rgb(221, 220, 220);
+}
+
+.form-control:focus {
+    color: #fff;
+}
+
+.button-menu-mobile {
+    background: #3292e0;
+    padding: 2px;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    height: 42px;
+    width: 42px;
+    border-radius: 50%;
 }
 
 @media (min-width: 768px) {
