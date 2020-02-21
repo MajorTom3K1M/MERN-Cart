@@ -8,6 +8,10 @@ import {
     Switch
 } from 'react-router-dom'
 
+import 'react-quill/dist/quill.bubble.css';
+import 'react-quill/dist/quill.core.css';
+import 'react-quill/dist/quill.snow.css';
+
 // imports css
 import './assets/scss/paper-dashboard.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';

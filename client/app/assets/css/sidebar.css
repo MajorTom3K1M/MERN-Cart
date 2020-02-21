@@ -27,6 +27,10 @@
     text-transform: uppercase;
 }
 
+.nav-item {
+    display: flex;
+}
+
 .nav-link {
     display: block;
     padding: .5rem 1rem;
@@ -43,4 +47,12 @@
 .logo-n span, .logo-sm span {
     color: #3292e0;
     font-family: 'Crete Round', serif;
+}
+
+.sidebar-link-addon {
+    width: 10%;
+}
+
+.sidebar-link-has-addon {
+    width: 90%;
 }

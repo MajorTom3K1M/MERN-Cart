@@ -22,7 +22,7 @@ class Dashboard extends React.Component {
                 </div>
                 <div className="page-content-wrapper">
                     <Row>
-                        <Col xs={6} lg={6} md={6}>
+                        <Col lg={6} md={6} sm={12}>
                             <Card className="card-stats text-center">
                                 <CardBody>
                                     <h4>Orders placed</h4>
@@ -32,7 +32,7 @@ class Dashboard extends React.Component {
                                 <CardFooter></CardFooter>
                             </Card>
                         </Col>
-                        <Col xs={6} lg={6} md={6}>
+                        <Col lg={6} md={6} sm={12}> 
                             <Card className="card-stats text-center">
                                 <CardBody>
                                     <h4>Order total value</h4>
@@ -42,7 +42,7 @@ class Dashboard extends React.Component {
                                 <CardFooter></CardFooter>
                             </Card>
                         </Col>
-                        <Col xs={6} lg={6} md={6}>
+                        <Col lg={6} md={6} sm={12}>
                             <Card className="card-stats text-center">
                                 <CardBody>
                                     <h4>Products for sale</h4>
@@ -52,7 +52,7 @@ class Dashboard extends React.Component {
                                 <CardFooter></CardFooter>
                             </Card>
                         </Col>
-                        <Col xs={6} lg={6} md={6}>
+                        <Col lg={6} md={6} sm={12}>
                             <Card className="card-stats text-center">
                                 <CardBody>
                                     <h4>Total products sold</h4>
@@ -69,9 +69,11 @@ class Dashboard extends React.Component {
                                 <CardHeader></CardHeader>
                                 <CardBody>
                                     <h4>Top products sold</h4>
-                                    <div><span className="number">Nothing to see yet. Do some orders.</span></div>
+                                    <div><span className="warning">Nothing to see yet. Do some orders.</span></div>
                                 </CardBody>
-                                <CardFooter><br/><br/></CardFooter>
+                                <CardFooter>
+                                    <br /><br />
+                                </CardFooter>
                             </Card>
                         </Col>
                     </Row>

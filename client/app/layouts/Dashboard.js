@@ -29,7 +29,6 @@ class Dashboard extends Component {
         })
     }
     render() {
-        let currentPath = this.props.location.pathname
         return (
             <div className="wrapper">
                 {/* sidebar */}
@@ -46,6 +45,9 @@ class Dashboard extends Component {
                             }
                             if (prop.redirect) {
                                 return <Redirect from={prop.path} to={prop.pathTo} key={key} />;
+                            }
+                            if (prop.isAddon) {
+                                return <Route exact path={prop.addonPath} component={prop.addonComponent} key={key} />
                             }
                             return (
                                 <Route exact path={prop.path} component={prop.component} key={key} />

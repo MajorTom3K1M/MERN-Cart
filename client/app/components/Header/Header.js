@@ -79,6 +79,7 @@ class Header extends Component {
         return (
             <Navbar
                 // color="dark"
+                sticky={'top'}
                 expand="lg"
                 className="navbar-default"
             >

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 
 import { NavLink } from "react-router-dom";
-import { Nav, NavItem, Collapse } from "reactstrap";
+import { Nav, NavItem, Collapse, Col, Row } from "reactstrap";
+
+// Icon
+import {
+    Plus
+} from 'react-feather'
 
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
@@ -43,7 +48,7 @@ class Sidebar extends Component {
                     {
                         this.props.routes.map((prop, key) => {
                             var Icon = prop.icon;
-                            if (prop.redirect) return null;
+                            if (prop.redirect || prop.isAddon) return null;
                             if (prop.heading) {
                                 return (
                                     <h6 key={key} className="sidebar-sm-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -52,16 +57,26 @@ class Sidebar extends Component {
                                 );
                             }
                             return (
-                                <NavItem key={key}>
+                                <NavItem key={key} >
                                     <NavLink
                                         to={prop.path}
-                                        className="nav-link"
-                                        >
+                                        className={ prop.addon ? "nav-link sidebar-link-has-addon" : "nav-link" }
+                                    >
                                         <Icon size="18px" className="icon" color="#999" />
                                         <span className="align-middle">
                                             {prop.name}
                                         </span>
                                     </NavLink>
+                                    {
+                                        prop.addon ? (
+                                            <NavLink
+                                                to={prop.addonPath}
+                                                className="nav-link"
+                                            >
+                                                <Plus size={16} className="text-muted" />
+                                            </NavLink>
+                                        ) : null
+                                    }
                                 </NavItem>
                             );
                         })

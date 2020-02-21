@@ -36,3 +36,52 @@
 .text-muted {
     color: #777;
 }
+
+.text-warning {
+    color: #fbc658;
+    font-weight: 100;
+}
+
+.btn-sm-outline {
+    font-size: 13px !important;
+} 
+
+.btn-outline-success {
+    border: 1px solid #6bd098 !important;
+}
+
+.btn-outline-warning {
+    border: 1px solid #fbc658 !important;
+}
+
+.ql-toolbar {
+    background-color: #f9f9f9;
+    border-bottom: 0 !important;
+    resize: vertical;
+}
+
+.ql-editor {
+    resize: vertical;
+    height: 300px;
+}
+
+.form-description {
+    font-size: 12px;
+}
+
+.page-content-wrapper .checkbox {
+    margin-left: 1px;
+}
+
+.nopadding {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.top-pad-10 {
+    padding-top: 10px;
+}
+
+.right-pad-10 {
+    padding-right: 10px;
+}

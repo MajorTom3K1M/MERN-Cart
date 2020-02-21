@@ -27,11 +27,11 @@
     padding-left: 20px !important;
 }
 
-.form-control::placeholder {
+.navbar .form-control::placeholder {
     color: rgb(221, 220, 220);
 }
 
-.form-control:focus {
+.navbar .form-control:focus {
     color: #fff;
 }
 

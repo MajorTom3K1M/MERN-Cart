@@ -1,5 +1,10 @@
 import React from "react";
 import Dashboard from '../views/Dashboard/Dashboard';
+import Products from '../views/Products/Products';
+import ProductCreate from '../views/Products/ProductsCreate';
+import Orders from '../views/Orders/Orders';
+import OrderCreate from '../views/Orders/OrderCreate'
+
 import * as Icon from 'react-feather';
 
 var dashRoutes = [
@@ -28,7 +33,9 @@ var dashRoutes = [
                 {...props}
             />
         ),
-        component: Dashboard
+        addon: true,
+        addonPath: "/products/new",
+        component: Products
     },
     {
         path: "/orders",
@@ -40,7 +47,9 @@ var dashRoutes = [
                 {...props}
             />
         ),
-        component: Dashboard
+        addon: true,
+        addonPath: "/orders/new",
+        component: Orders
     },
     { 
         path: "/customers", 
@@ -64,6 +73,8 @@ var dashRoutes = [
                 {...props}
             />
         ),
+        addon: true,
+        addonPath: "/users/new",
         component: Dashboard
     },
     { 
@@ -116,6 +127,9 @@ var dashRoutes = [
             />
         ),
     },
+    { isAddon: true, addonPath: "/products/new", addonComponent: ProductCreate },
+    { isAddon: true, addonPath: "/orders/new", addonComponent: OrderCreate },
+    { isAddon: true, addonPath: "/users/new", addonComponent: Dashboard },
     { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
 ];
 export default dashRoutes;

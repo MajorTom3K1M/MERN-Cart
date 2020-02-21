@@ -29,6 +29,10 @@ module.exports = {
     }
   },
 
+  externals: {
+    jquery: 'jQuery'
+  },
+
   module: {
     rules: [
       // JS files
@@ -66,14 +70,32 @@ module.exports = {
               // Prefer `dart-sass`
               implementation: require('sass'),
             },
-          },
+          }
         ],
       },
+
+      // Load fonts
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'fonts/',
+            publicPath: url => `../fonts/${url}`
+          }
+        }]
+      }
     ]
   },
 
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery"
+    }),
 
     new webpack.DefinePlugin({
       'process.env': {
