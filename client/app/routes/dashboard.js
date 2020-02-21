@@ -3,7 +3,8 @@ import Dashboard from '../views/Dashboard/Dashboard';
 import Products from '../views/Products/Products';
 import ProductCreate from '../views/Products/ProductsCreate';
 import Orders from '../views/Orders/Orders';
-import OrderCreate from '../views/Orders/OrderCreate'
+import OrderCreate from '../views/Orders/OrderCreate';
+import Customers from '../views/Customers/Customers';
 
 import * as Icon from 'react-feather';
 
@@ -61,7 +62,7 @@ var dashRoutes = [
                 {...props}
             />
         ),
-        component: Dashboard 
+        component: Customers 
     },
     {
         path: "/users",
