@@ -5,6 +5,8 @@ import ProductCreate from '../views/Products/ProductsCreate';
 import Orders from '../views/Orders/Orders';
 import OrderCreate from '../views/Orders/OrderCreate';
 import Customers from '../views/Customers/Customers';
+import Users from '../views/Users/Users';
+import UserCreate from '../views/Users/UserCreate';
 
 import * as Icon from 'react-feather';
 
@@ -76,7 +78,7 @@ var dashRoutes = [
         ),
         addon: true,
         addonPath: "/users/new",
-        component: Dashboard
+        component: Users
     },
     { 
         heading: "Settings"
@@ -130,7 +132,7 @@ var dashRoutes = [
     },
     { isAddon: true, addonPath: "/products/new", addonComponent: ProductCreate },
     { isAddon: true, addonPath: "/orders/new", addonComponent: OrderCreate },
-    { isAddon: true, addonPath: "/users/new", addonComponent: Dashboard },
+    { isAddon: true, addonPath: "/users/new", addonComponent: UserCreate },
     { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
 ];
 export default dashRoutes;
