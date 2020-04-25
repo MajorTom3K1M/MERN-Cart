@@ -115,6 +115,6 @@ module.exports = {
 
     new CopyWebpackPlugin([{
       from: helpers.root('client/public')
-    }])
+    }]),
   ]
 };

@@ -12,13 +12,16 @@ import 'react-quill/dist/quill.bubble.css';
 import 'react-quill/dist/quill.core.css';
 import 'react-quill/dist/quill.snow.css';
 
+import 'codemirror/lib/codemirror.css'
+
 // imports css
-import './assets/scss/paper-dashboard.scss';
+// import './assets/scss/paper-dashboard.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './assets/css/sidebar.css';
+// import './assets/css/sidebar.css';
 import './assets/css/navbar.css';
 import './assets/css/styles.css';
-import './assets/demo/demo.css';
+// import './assets/css/codemirror-style.min.css';
+// import './assets/demo/demo.css';
 
 // routes
 import indexRoutes from './routes/index';

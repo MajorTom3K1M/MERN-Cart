@@ -1,33 +1,18 @@
 import React, { Component } from 'react';
 
-import PerfectScrollbar from 'perfect-scrollbar';
 import { Route, Switch, Redirect } from "react-router-dom";
 
 // import routes
 import dashboardRoutes from '../routes/dashboard';
 
 import Header from '../components/Header/Header';
-import Dashboard1 from '../views/Dashboard/Dashboard';
 import Sidebar from '../components/Sidebar/Sidebar';
 
 class Dashboard extends Component {
     constructor(props) {
         super(props);
-        this.getRoute = this.getRoute.bind(this);
     }
 
-    getRoute() {
-        return dashboardRoutes.map((prop, key) => {
-            if (prop.redirect) {
-                return (
-                    <Redirect exact from={prop.path} to={prop.pathTo} key={key} />
-                );
-            }
-            return (
-                <Route path={prop.path} component={prop.component} key={key} />
-            );
-        })
-    }
     render() {
         return (
             <div className="wrapper">
@@ -48,6 +33,9 @@ class Dashboard extends Component {
                             }
                             if (prop.isAddon) {
                                 return <Route exact path={prop.addonPath} component={prop.addonComponent} key={key} />
+                            }
+                            if (prop.subPath) {
+                                return <Route exact path={prop.path} component={prop.component} key={key} />
                             }
                             return (
                                 <Route exact path={prop.path} component={prop.component} key={key} />

@@ -48,7 +48,7 @@ class Sidebar extends Component {
                     {
                         this.props.routes.map((prop, key) => {
                             var Icon = prop.icon;
-                            if (prop.redirect || prop.isAddon) return null;
+                            if (prop.redirect || prop.isAddon || prop.subPath) return null;
                             if (prop.heading) {
                                 return (
                                     <h6 key={key} className="sidebar-sm-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">

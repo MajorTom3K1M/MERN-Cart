@@ -90,58 +90,67 @@ app.use(express.static(path.join(__dirname, 'public')));
 // setup the routes
 app.use('/', admin);
 
+// catch 404 and forward to error handler
+// app.use((req, res, next) => {
+//     const err = new Error('Not Found');
+//     err.status = 404;
+//     next(err);
+// });
+
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
     const compiler = webpack(webpackConfig);
 
     app.use(historyApiFallback({
-      verbose: false
+        verbose: false
     }));
-  
+
     app.use(webpackDevMiddleware(compiler, {
-      publicPath: webpackConfig.output.publicPath,
-      contentBase: path.resolve(__dirname, '../client/public'),
-      stats: {
-        colors: true,
-        hash: false,
-        timings: true,
-        chunks: false,
-        chunkModules: false,
-        modules: false
-      }
+        publicPath: webpackConfig.output.publicPath,
+        contentBase: path.resolve(__dirname, '../client/public'),
+        stats: {
+            colors: true,
+            hash: false,
+            timings: true,
+            chunks: false,
+            chunkModules: false,
+            modules: false
+        }
     }));
 
     app.use(webpackHotMiddleware(compiler));
     app.use(express.static(path.resolve(__dirname, '../dist')));
 
+    // development error handler
+    // will print stacktrace
     app.use((err, req, res, next) => {
         console.error(colors.red(err.stack));
         res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err,
-            helpers: handlebars.helpers
-        });
+        // res.render('error', {
+        //     message: err.message,
+        //     error: err,
+        //     helpers: handlebars.helpers
+        // });
     });
 } else {
     app.use(express.static(path.resolve(__dirname, '../dist')));
     app.get('*', function (req, res) {
-      res.sendFile(path.resolve(__dirname, '../dist/index.html'));
-      res.end();
+        res.sendFile(path.resolve(__dirname, '../dist/index.html'));
+        res.end();
     });
-} 
+}
 
 // production error handler
 // no stacktraces leaked to user
 app.use((err, req, res, next) => {
     console.error(colors.red(err.stack));
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {},
-        helpers: handlebars.helpers
-    });
+    // res.render('error', {
+    //     message: err.message,
+    //     error: {},
+    //     helpers: handlebars.helpers
+    // });
 });
 
 app.on('uncaughtException', (err) => {

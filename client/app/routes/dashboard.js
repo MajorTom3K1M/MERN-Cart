@@ -7,6 +7,12 @@ import OrderCreate from '../views/Orders/OrderCreate';
 import Customers from '../views/Customers/Customers';
 import Users from '../views/Users/Users';
 import UserCreate from '../views/Users/UserCreate';
+import GeneralSetting from '../views/Settings/GeneralSettings';
+import Menu from '../views/Settings/Menu';
+import StaticPages from '../views/Settings/StaticPages';
+import CreateStaticPage from '../views/Settings/CreateStaticPage';
+import DiscountCodes from '../views/Settings/DiscountCodes';
+import CreateDiscountCode from '../views/Settings/CreateDiscountCode';
 
 import * as Icon from 'react-feather';
 
@@ -93,7 +99,7 @@ var dashRoutes = [
                 {...props}
             />
         ),
-        component: Dashboard
+        component: GeneralSetting
     },
     {
         path: "/settings/menu",
@@ -105,7 +111,7 @@ var dashRoutes = [
                 {...props}
             />
         ),
-        component: Dashboard
+        component: Menu
     },
     {
         path: "/settings/pages",
@@ -117,7 +123,13 @@ var dashRoutes = [
                 {...props}
             />
         ),
-        component: Dashboard
+        component: StaticPages
+    },
+    {
+        path: "/settings/pages/new",
+        subPath: true,
+        name: "New Pages",
+        component: CreateStaticPage
     },
     {
         path: "/settings/discounts",
@@ -129,10 +141,17 @@ var dashRoutes = [
                 {...props}
             />
         ),
+        component: DiscountCodes
+    },
+    {
+        path: "/settings/discount/new",
+        subPath: true,
+        name: "New Discount",
+        component: CreateDiscountCode
     },
     { isAddon: true, addonPath: "/products/new", addonComponent: ProductCreate },
     { isAddon: true, addonPath: "/orders/new", addonComponent: OrderCreate },
     { isAddon: true, addonPath: "/users/new", addonComponent: UserCreate },
-    { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
+    // { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
 ];
 export default dashRoutes;
