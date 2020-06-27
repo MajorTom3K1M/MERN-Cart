@@ -29,7 +29,7 @@ class Customers extends React.Component {
                 <div className="page-header-title">
                     <h4 className="page-title">
                         Customers
-                </h4>
+                    </h4>
                 </div>
                 <div className="page-content-wrapper">
                     <Row>

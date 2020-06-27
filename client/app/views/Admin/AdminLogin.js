@@ -8,16 +8,16 @@ import {
 } from "reactstrap";
 import { withRouter } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { connect } from 'react-redux'
-import { loginAction } from '../../services/customers/actions'
+import { connect } from 'react-redux';
+import { userLogin } from '../../services/admin/actions';
+import HomePage from '../../layouts/HomePage';
 
-const LoginForm = ({ props: { loginAction, history } }) => {
+const LoginForm = ({ props: { userLogin, history } }) => {
     const { register, watch, handleSubmit, reset } = useForm();
     const onSubmit = data => {
         const { loginEmail, loginPassword } = data;
-        loginAction(loginEmail, loginPassword, () => {
-            history.push("/customer/account");
-        });
+        userLogin(loginEmail, loginPassword);
+        history.push("/admin/dashboard");
     }
 
     return (
@@ -34,12 +34,21 @@ const LoginForm = ({ props: { loginAction, history } }) => {
     );
 }
 
-class CustomerLogin extends Component {
+class AdminLogin extends Component {
+    componentDidMount() {
+        // if(this.props.admin.isAdmin) {
+        //     this.props.history.push("/admin/dashboard")
+        // }
+    }
     render() {
         return (
-            <Col md={{ size: 4, offset: 4 }} className="top-pad-100">
-                <LoginForm props={this.props} />
-            </Col>
+            <HomePage
+                component={() => (
+                    <Col md={{ size: 4, offset: 4 }} className="top-pad-100">
+                        <LoginForm props={this.props} />
+                    </Col>
+                )}
+            />
         );
     }
 }
@@ -47,10 +56,11 @@ class CustomerLogin extends Component {
 const mapStateToProps = state => {
     console.log(state)
     return {
-        customer: state.customer
+        customer: state.customer,
+        admin: state.admin
     }
 }
 
 export default withRouter(
-    connect(mapStateToProps, { loginAction } )(CustomerLogin)
+    connect(mapStateToProps, { userLogin })(AdminLogin)
 );

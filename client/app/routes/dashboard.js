@@ -13,12 +13,14 @@ import StaticPages from '../views/Settings/StaticPages';
 import CreateStaticPage from '../views/Settings/CreateStaticPage';
 import DiscountCodes from '../views/Settings/DiscountCodes';
 import CreateDiscountCode from '../views/Settings/CreateDiscountCode';
+import AdminSetup from "../views/Admin/AdminSetup";
+import AdminLogin from "../views/Admin/AdminLogin";
 
 import * as Icon from 'react-feather';
 
 var dashRoutes = [
     {
-        path: "/dashboard",
+        path: "/admin/dashboard",
         name: "Dashboard",
         icon: ({ size, color, props }) => (
             <Icon.BarChart 
@@ -33,7 +35,7 @@ var dashRoutes = [
         heading: "manage"
     },
     {
-        path: "/products",
+        path: "/admin/products",
         name: "Products",
         icon: ({ size, color, props }) => (
             <Icon.Tag 
@@ -43,11 +45,11 @@ var dashRoutes = [
             />
         ),
         addon: true,
-        addonPath: "/products/new",
+        addonPath: "/admin/products/new",
         component: Products
     },
     {
-        path: "/orders",
+        path: "/admin/orders",
         name: "Orders",
         icon: ({ size, color, props }) => (
             <Icon.Package 
@@ -57,11 +59,11 @@ var dashRoutes = [
             />
         ),
         addon: true,
-        addonPath: "/orders/new",
+        addonPath: "/admin/orders/new",
         component: Orders
     },
     { 
-        path: "/customers", 
+        path: "/admin/customers", 
         name: "Customers", 
         icon: ({ size, color, props }) => (
             <Icon.Users 
@@ -73,7 +75,7 @@ var dashRoutes = [
         component: Customers 
     },
     {
-        path: "/users",
+        path: "/admin/users",
         name: "Users",
         icon: ({ size, color, props }) => (
             <Icon.User 
@@ -83,14 +85,14 @@ var dashRoutes = [
             />
         ),
         addon: true,
-        addonPath: "/users/new",
+        addonPath: "/admin/users/new",
         component: Users
     },
     { 
         heading: "Settings"
     },
     {
-        path: "/settings",
+        path: "/admin/settings",
         name: "General Settings",
         icon: ({ size, color, props }) => (
             <Icon.Sliders 
@@ -102,7 +104,7 @@ var dashRoutes = [
         component: GeneralSetting
     },
     {
-        path: "/settings/menu",
+        path: "/admin/settings/menu",
         name: "Menu",
         icon: ({ size, color, props }) => (
             <Icon.Menu 
@@ -114,7 +116,7 @@ var dashRoutes = [
         component: Menu
     },
     {
-        path: "/settings/pages",
+        path: "/admin/settings/pages",
         name: "Static pages",
         icon: ({ size, color, props }) => (
             <Icon.FileText 
@@ -126,13 +128,13 @@ var dashRoutes = [
         component: StaticPages
     },
     {
-        path: "/settings/pages/new",
+        path: "/admin/settings/pages/new",
         subPath: true,
         name: "New Pages",
         component: CreateStaticPage
     },
     {
-        path: "/settings/discounts",
+        path: "/admin/settings/discounts",
         name: "Discount codes",
         icon: ({ size, color, props }) => (
             <Icon.Code 
@@ -144,14 +146,14 @@ var dashRoutes = [
         component: DiscountCodes
     },
     {
-        path: "/settings/discount/new",
+        path: "/admin/settings/discount/new",
         subPath: true,
         name: "New Discount",
         component: CreateDiscountCode
     },
-    { isAddon: true, addonPath: "/products/new", addonComponent: ProductCreate },
-    { isAddon: true, addonPath: "/orders/new", addonComponent: OrderCreate },
-    { isAddon: true, addonPath: "/users/new", addonComponent: UserCreate },
+    { isAddon: true, addonPath: "/admin/products/new", addonComponent: ProductCreate },
+    { isAddon: true, addonPath: "/admin/orders/new", addonComponent: OrderCreate },
+    { isAddon: true, addonPath: "/admin/users/new", addonComponent: UserCreate },
     // { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
 ];
 export default dashRoutes;

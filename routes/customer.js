@@ -14,6 +14,12 @@ const apiLimiter = rateLimit({
     max: 5
 });
 
+router.get('/test', async (req, res) => {
+    const db = req.app.db;
+    console.log(req.session)
+    res.status(200).json(req.session)
+})
+
 // insert a customer
 router.post('/customer/create', async (req, res) => {
     const db = req.app.db;
@@ -33,7 +39,7 @@ router.post('/customer/create', async (req, res) => {
     };
 
     // check for existing customer
-    const customer = await db.customer.findOne({ email: req.body.email });
+    const customer = await db.customers.findOne({ email: req.body.email });
     if (customer) {
         res.status(400).json({
             message: 'A customer already exists with that email address'
@@ -199,10 +205,10 @@ router.get('/admin/customers/filter/:search', restrict, async (req, res, next) =
     });
 
     // we search on the lunr indexes
-    const customers = await db.customers.find({ _id: { $in: lunrIdArray }});
+    const customers = await db.customers.find({ _id: { $in: lunrIdArray } });
 
     // If API request, return json
-    if(req.apiAuthenticated) {
+    if (req.apiAuthenticated) {
         return res.status(200).json({
             customers
         });
@@ -219,3 +225,57 @@ router.get('/admin/customers/filter/:search', restrict, async (req, res, next) =
         messageType: common.clearSessionValue(req.session, 'messageType')
     })
 });
+
+router.post('/customer/login', async (req, res) => {
+    const db = req.app.db;
+
+    const customer = await db.customers.findOne({ email: req.body.loginEmail })
+
+    if (customer === undefined || customer === null) {
+        res.status(400).json({
+            message: 'A customer with that email does not exist.'
+        });
+        return;
+    }
+
+    bcrypt.compare(req.body.loginPassword, customer.password)
+    .then((result) => {
+        if(!result) {
+            res.status(400).json({
+                message: 'Access denied. Check password and try again.'
+            });
+            return;
+        }
+
+        req.session.customerPresent = true;
+        req.session.customerId = customer._id;
+        req.session.customerEmail = customer.email;
+        req.session.customerCompany = customer.company;
+        req.session.customerFirstname = customer.firstName;
+        req.session.customerLastname = customer.lastName;
+        req.session.customerAddress1 = customer.address1;
+        req.session.customerAddress2 = customer.address2;
+        req.session.customerCountry = customer.country;
+        req.session.customerState = customer.state;
+        req.session.customerPostcode = customer.postcode;
+        req.session.customerPhone = customer.phone;
+        // console.log(req.session)
+        res.status(200).json({
+            message: 'Successfully logged in',
+            customer: customer
+        });
+    })
+    .catch((err) => {
+        res.status(400).json({
+            message: 'Access denied. Check password and try again.'
+        });
+    });
+});
+
+router.post('/customer/logout', (req, res) => {
+    // Clear our session
+    common.clearCustomer(req);
+    res.status(200).json({ success: true });
+});
+
+module.exports = router

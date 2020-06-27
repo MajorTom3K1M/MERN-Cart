@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, NavLink } from "react-router-dom";
 import {
     Navbar,
     NavItem,
-    NavLink,
+    // NavLink,
     InputGroup,
     FormGroup,
     InputGroupAddon,
@@ -21,13 +21,13 @@ class NavbarComponent extends Component {
                 <Col sm={8} md={{ offset: 2 }} style={{ display: "flex" }}>
                     <Nav className="mr-auto" navbar>
                         <NavItem>
-                            <NavLink href="/components/">Home</NavLink>
+                            <NavLink className="nav-link" to="/components/">Home</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/components/">Backpacks</NavLink>
+                            <NavLink className="nav-link" to="/components/">Backpacks</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/components/">Boots</NavLink>
+                            <NavLink className="nav-link" to="/components/">Boots</NavLink>
                         </NavItem>
                     </Nav>
                     <FormGroup style={{ margin: 0 }} className="ml-auto">

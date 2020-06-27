@@ -1,55 +1,74 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, NavLink, Link } from "react-router-dom";
 import {
     Navbar,
     NavItem,
-    NavLink,
-    InputGroup,
-    FormGroup,
-    InputGroupAddon,
-    Collapse,
     Container,
-    Input,
-    Button,
-    Nav,
-    Col,
-    Row
+    Row,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
 } from "reactstrap";
-import { User, ShoppingCart } from "react-feather"
+import { User, ShoppingCart } from "react-feather";
+import { CustomerAuthRoute, CustomerProtectedRoute, SetupProtectedRoute } from "../util/route";
+import { connect } from "react-redux";
 
 import mainRoute from "../routes/main";
 import NavbarComponent from "../components/Home/Navbar";
 
-let hiddenNavBarPaths = mainRoute.filter((prop) => prop.navBar === false).map((prop) => prop.path)
+import { logoutAction } from '../services/customers/actions'
+
+// let hiddenNavBarPaths = mainRoute.filter((prop) => prop.navBar === false).map((prop) => prop.path)
 class HomePage extends Component {
     state = {
         navBar: true,
+        dropdownOpen: false
     }
-    componentDidMount(_, prevState) {
-        const { pathname } = this.props.history.location;
-        console.log(hiddenNavBarPaths)
 
-        if (hiddenNavBarPaths.includes(pathname)) {
-            this.setState({ navBar: false });
-        } else {
-            this.setState({ navBar: true });
-        }
+    componentDidMount() {
+        console.log("HOMEPAGE!!!!!!!!!")
     }
+
+    toggle = () => this.setState(prevState => ({ dropdownOpen: !prevState.dropdownOpen }));
 
     render() {
-        const { navBar } = this.state;
+        const { navBar, dropdownOpen } = this.state;
+        const { logoutAction, component: Component } = this.props;
+        const { customerPresent } = this.props.customer;
         return (
             <div className="wrapper">
                 <Navbar className="justify-content-between" expand="lg">
-                    <a className="navbar-brand" href="/">
+                    <Link className="navbar-brand" to="/">
                         CLOTH
-                    </a>
+                    </Link>
                     <div>
                         <ul className="navbar-nav ml-auto">
                             <NavItem className="ml-3">
-                                <a href="/customer/login" className="btn">
-                                    <User size={16} />
-                                </a>
+                                {
+                                    customerPresent ?
+                                        (
+                                            <Dropdown className="btn" direction="down" isOpen={dropdownOpen} toggle={this.toggle}>
+                                                <DropdownToggle tag="text" caret>
+                                                    <User size={16} />
+                                                </DropdownToggle>
+                                                <DropdownMenu>
+                                                    <DropdownItem>
+                                                        <Link to="/customer/account">
+                                                            Account
+                                                        </Link>
+                                                    </DropdownItem>
+                                                    <DropdownItem onClick={logoutAction}>
+                                                        Logout
+                                                    </DropdownItem>
+                                                </DropdownMenu>
+                                            </Dropdown>
+                                        ) : (
+                                            <Link to="/customer/login" className="btn">
+                                                <User size={16} />
+                                            </Link>
+                                        )
+                                }
                             </NavItem>
                             <NavItem>
                                 <a href="/customer/login" className="btn">
@@ -59,49 +78,73 @@ class HomePage extends Component {
                         </ul>
                     </div>
                 </Navbar>
-                    <Container fluid>
-                        <Row>
-                            {/* <Navbar className="col-sm-12" color="light" light expand="md">
-                            <Col sm={8} md={{ offset: 2 }} style={{ display: "flex" }}>
-                                <Nav className="mr-auto" navbar>
-                                    <NavItem>
-                                        <NavLink href="/components/">Home</NavLink>
-                                    </NavItem>
-                                    <NavItem>
-                                        <NavLink href="/components/">Backpacks</NavLink>
-                                    </NavItem>
-                                    <NavItem>
-                                        <NavLink href="/components/">Boots</NavLink>
-                                    </NavItem>
-                                </Nav>
-                                <FormGroup style={{ margin: 0 }} className="ml-auto">
-                                    <InputGroup>
-                                        <Input placeholder="Search..." />
-                                        <InputGroupAddon addonType={"append"}>
-                                            <Button color={"outline-success"} className="btn-sm-outline">Search</Button>
-                                        </InputGroupAddon>
-                                    </InputGroup>
-                                </FormGroup>
-                            </Col>
-                        </Navbar> */}
-                            {
-                                navBar ? <NavbarComponent /> : null
-                            }
-
-                            <Col sm={navBar ? 12 : ''} md={navBar ? { size: 8, offset: 2 } : { size: 4, offset: 4 }} className={navBar ? "product-layout" : "top-pad-100"}>
-                                {
-                                    mainRoute.map((prop, key) => {
+                <Container fluid>
+                    <Row>
+                        {
+                            Component ?
+                                // <Route exact path={routes.path} component={() => (
+                                    <Component />
+                                // )} />
+                                :
+                                mainRoute.map((prop, key) => {
+                                    if (prop.auth) {
                                         return (
-                                            <Route exact path={prop.path} component={prop.component} key={key} />
+                                            <CustomerAuthRoute path={prop.path} component={() => (
+                                                <>
+                                                    {prop.navBar === false ? null : <NavbarComponent />}
+                                                    <prop.component />
+                                                </>
+                                            )} key={key} />
                                         );
-                                    })
-                                }
-                            </Col>
-                        </Row>
-                    </Container>
-            </div>
+                                    }
+                                    if (prop.protected) {
+                                        return (
+                                            <CustomerProtectedRoute path={prop.path} component={() => (
+                                                <>
+                                                    {prop.navBar === false ? null : <NavbarComponent />}
+                                                    <prop.component />
+                                                </>
+                                            )} key={key} />
+                                        );
+                                    }
+                                    if (prop.checkSetup) {
+                                        return (
+                                            <SetupProtectedRoute path={prop.path} component={() => (
+                                                <>
+                                                    {prop.navBar === false ? null : <NavbarComponent />}
+                                                    <prop.component />
+                                                </>
+                                            )} key={key} />
+                                        );
+                                    }
+                                    if (prop.noComponent) {
+                                        return;
+                                    }
+                                    return (
+                                        <Route exact path={prop.path} component={() => (
+                                            <>
+                                                {prop.navBar === false ? null : <NavbarComponent />}
+                                                <prop.component />
+                                            </>
+                                        )} key={key} />
+                                    );
+                                })
+
+                        }
+
+                    </Row>
+                </Container>
+            </div >
         );
     }
 }
 
-export default HomePage;
+const mapStateToProps = state => {
+    return {
+        customer: state.customer
+    }
+}
+
+export default connect(
+    mapStateToProps, { logoutAction }
+)(HomePage);

@@ -15,7 +15,7 @@ import {
 class Product extends Component {
     render() {
         return (
-            <>
+            <Col sm={12} md={{ size: 8, offset: 2 }} className="product-layout">
                 <Row>
                     <Col sm={12} md={6} className="mr-auto">
                         <div className="title-image-container">
@@ -191,7 +191,7 @@ class Product extends Component {
                         </Col>
                     </Row>
                 </Col>
-            </>
+            </Col>
         );
     }
 }

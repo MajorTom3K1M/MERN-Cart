@@ -18,9 +18,10 @@ const emailRegex = /\S+@\S+\.\S+/;
 const numericRegex = /^\d*\.?\d*$/;
 
 // Admin section
-router.get('/admin', restrict, (req, res, next) => {
-    res.redirect('/admin/dashboard');
-});
+
+// router.get('/admin', restrict, (req, res, next) => {
+//     res.redirect('/admin/dashboard');
+// });
 
 // logout
 router.get('/admin/logout', (req, res) => {
@@ -31,35 +32,25 @@ router.get('/admin/logout', (req, res) => {
 });
 
 // login form
-router.get('/admin/login', async (req, res) => {
+router.get('/admin/check_setup', async (req, res) => {
     const db = req.app.db;
 
     const userCount = await db.users.countDocuments({});
-    // we check for a user. If one exists, redirect to login form otherwise setup
-    if(userCount && userCount > 0){
-        // set needsSetup to false as a user exists
-        req.session.needsSetup = false;
-        res.render('login', {
-            title: 'Login',
-            referringUrl: req.header('Referer'),
-            config: req.app.config,
-            message: common.clearSessionValue(req.session, 'message'),
-            messageType: common.clearSessionValue(req.session, 'messageType'),
-            helpers: req.handlebars.helpers,
-            showFooter: 'showFooter'
-        });
-    }else{
-        // if there are no users set the "needsSetup" session
-        req.session.needsSetup = true;
-        res.redirect('/admin/setup');
-    }
-});
 
+    if(userCount && userCount > 0) {
+        // req.session.needsSetup = false;
+
+        res.status(200).send({ needSetup: false })
+    } else {
+        // req.session.needsSetup = false;
+
+        res.status(200).send({ needSetup: true })
+    }
+})
 
 // login the user and check the password
-router.post('/admin/login_action', async (req, res) => {
+router.post('/admin/login', async (req, res) => {
     const db = req.app.db;
-
     const user = await db.users.findOne({ userEmail: common.mongoSanitize(req.body.email) });
     if(!user || user === null){
         res.status(400).json({ message: 'A user with that email does not exist.' });
@@ -74,36 +65,42 @@ router.post('/admin/login_action', async (req, res) => {
                 req.session.usersName = user.usersName;
                 req.session.userId = user._id.toString();
                 req.session.isAdmin = user.isAdmin;
-                res.status(200).json({ message: 'Login successful' });
+                res.status(200).json({ 
+                    message: 'Login successful',
+                    user: user
+                });
                 return;
             }
             // password is not correct
-            res.status(400).json({ message: 'Access denied. Check password and try again.' });
+            res.status(400).json({ 
+                message: 'Access denied. Check password and try again.' 
+            });
         });
 });
 
 // setup form is shown when there are no users setup in the DB
-router.get('/admin/setup', async (req, res) => {
-    const db = req.app.db;
+// router.get('/admin/setup', async (req, res) => {
+//     const db = req.app.db;
 
-    const userCount = await db.users.countDocuments({});
+//     const userCount = await db.users.countDocuments({});
     // dont allow the user to "re-setup" if a user exists.
     // set needsSetup to false as a user exists
-    req.session.needsSetup = false;
-    if(userCount === 0){
-        req.session.needsSetup = true;
-        res.render('setup', {
-            title: 'Setup',
-            config: req.app.config,
-            helpers: req.handlebars.helpers,
-            message: common.clearSessionValue(req.session, 'message'),
-            messageType: common.clearSessionValue(req.session, 'messageType'),
-            showFooter: 'showFooter'
-        });
-        return;
-    }
-    res.redirect('/admin/login');
-});
+
+    // req.session.needsSetup = false;
+    // if(userCount === 0){
+    //     req.session.needsSetup = true;
+    //     res.render('setup', {
+    //         title: 'Setup',
+    //         config: req.app.config,
+    //         helpers: req.handlebars.helpers,
+    //         message: common.clearSessionValue(req.session, 'message'),
+    //         messageType: common.clearSessionValue(req.session, 'messageType'),
+    //         showFooter: 'showFooter'
+    //     });
+    //     return;
+    // }
+    // res.redirect('/admin/login');
+// });
 
 // insert a user
 router.post('/admin/setup_action', async (req, res) => {

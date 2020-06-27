@@ -16,8 +16,16 @@ import {
     ListGroup,
     ListGroupItem
 } from "reactstrap";
-
 import ReactQuill from 'react-quill';
+import { connect } from 'react-redux';
+import { useForm } from 'react-hook-form';
+
+const InsertProductForm = (props) => {
+    const { register, watch, handleSubmit, reset } = useForm();
+    const onSubmit = async data => {
+        
+    }
+}
 
 class ProductCreate extends React.Component {
     render() {

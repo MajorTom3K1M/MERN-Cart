@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { Route, Switch, Redirect } from "react-router-dom";
+import { UserAuthRoute } from "../util/route"
 
 // import routes
 import dashboardRoutes from '../routes/dashboard';
@@ -14,6 +15,7 @@ class Dashboard extends Component {
     }
 
     render() {
+        // const { routes } = this.props;
         return (
             <div className="wrapper">
                 {/* sidebar */}
@@ -32,13 +34,13 @@ class Dashboard extends Component {
                                 return <Redirect from={prop.path} to={prop.pathTo} key={key} />;
                             }
                             if (prop.isAddon) {
-                                return <Route exact path={prop.addonPath} component={prop.addonComponent} key={key} />
+                                return <UserAuthRoute exact path={prop.addonPath} component={prop.addonComponent} key={key} />
                             }
                             if (prop.subPath) {
-                                return <Route exact path={prop.path} component={prop.component} key={key} />
+                                return <UserAuthRoute exact path={prop.path} component={prop.component} key={key} />
                             }
                             return (
-                                <Route exact path={prop.path} component={prop.component} key={key} />
+                                <UserAuthRoute exact path={prop.path} component={prop.component} key={key} />
                             );
                         })}
                     </Switch>

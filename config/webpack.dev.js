@@ -10,7 +10,8 @@ module.exports = merge(commonConfig, {
 
   entry: {
     'app': [
-      'webpack-hot-middleware/client?reload=true'
+      'webpack-hot-middleware/client?reload=true',
+      'regenerator-runtime/runtime.js'
     ]
   },
 
@@ -23,5 +24,9 @@ module.exports = merge(commonConfig, {
     contentBase: './client/public',
     historyApiFallback: true,
     stats: 'minimal' // none (or false), errors-only, minimal, normal (or true) and verbose
-  }
+  },
+
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
 });

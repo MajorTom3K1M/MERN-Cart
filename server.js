@@ -41,6 +41,8 @@ const config = common.getConfig();
 
 // require the routes
 const admin = require('./routes/admin');
+const customer = require('./routes/customer');
+const sessionRoute = require('./routes/session');
 
 // require routes
 const app = express();
@@ -70,8 +72,8 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(config.secretCookie));
 app.use(session({
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     secret: config.secretSession,
     cookie: {
         path: '/',
@@ -89,6 +91,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // setup the routes
 app.use('/', admin);
+app.use('/', customer);
+app.use('/', sessionRoute);
 
 // catch 404 and forward to error handler
 // app.use((req, res, next) => {

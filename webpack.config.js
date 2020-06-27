@@ -1,3 +1,4 @@
+// process.env.NODE_ENV = 'development'
 switch (process.env.NODE_ENV) {
   case 'prod':
   case 'production':
