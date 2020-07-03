@@ -35,11 +35,6 @@ const LoginForm = ({ props: { userLogin, history } }) => {
 }
 
 class AdminLogin extends Component {
-    componentDidMount() {
-        // if(this.props.admin.isAdmin) {
-        //     this.props.history.push("/admin/dashboard")
-        // }
-    }
     render() {
         return (
             <HomePage

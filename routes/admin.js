@@ -17,12 +17,6 @@ const router = express.Router();
 const emailRegex = /\S+@\S+\.\S+/;
 const numericRegex = /^\d*\.?\d*$/;
 
-// Admin section
-
-// router.get('/admin', restrict, (req, res, next) => {
-//     res.redirect('/admin/dashboard');
-// });
-
 // logout
 router.get('/admin/logout', (req, res) => {
     req.session.user = null;
@@ -36,8 +30,8 @@ router.get('/admin/check_setup', async (req, res) => {
     const db = req.app.db;
 
     const userCount = await db.users.countDocuments({});
-
-    if(userCount && userCount > 0) {
+    // console.log("userCount", userCount)
+    if (userCount && userCount > 0) {
         // req.session.needsSetup = false;
 
         res.status(200).send({ needSetup: false })
@@ -52,7 +46,7 @@ router.get('/admin/check_setup', async (req, res) => {
 router.post('/admin/login', async (req, res) => {
     const db = req.app.db;
     const user = await db.users.findOne({ userEmail: common.mongoSanitize(req.body.email) });
-    if(!user || user === null){
+    if (!user || user === null) {
         res.status(400).json({ message: 'A user with that email does not exist.' });
         return;
     }
@@ -60,47 +54,23 @@ router.post('/admin/login', async (req, res) => {
     // we have a user under that email so we compare the password
     bcrypt.compare(req.body.password, user.userPassword)
         .then((result) => {
-            if(result){
+            if (result) {
                 req.session.user = req.body.email;
                 req.session.usersName = user.usersName;
                 req.session.userId = user._id.toString();
                 req.session.isAdmin = user.isAdmin;
-                res.status(200).json({ 
+                res.status(200).json({
                     message: 'Login successful',
                     user: user
                 });
                 return;
             }
             // password is not correct
-            res.status(400).json({ 
-                message: 'Access denied. Check password and try again.' 
+            res.status(400).json({
+                message: 'Access denied. Check password and try again.'
             });
         });
 });
-
-// setup form is shown when there are no users setup in the DB
-// router.get('/admin/setup', async (req, res) => {
-//     const db = req.app.db;
-
-//     const userCount = await db.users.countDocuments({});
-    // dont allow the user to "re-setup" if a user exists.
-    // set needsSetup to false as a user exists
-
-    // req.session.needsSetup = false;
-    // if(userCount === 0){
-    //     req.session.needsSetup = true;
-    //     res.render('setup', {
-    //         title: 'Setup',
-    //         config: req.app.config,
-    //         helpers: req.handlebars.helpers,
-    //         message: common.clearSessionValue(req.session, 'message'),
-    //         messageType: common.clearSessionValue(req.session, 'messageType'),
-    //         showFooter: 'showFooter'
-    //     });
-    //     return;
-    // }
-    // res.redirect('/admin/login');
-// });
 
 // insert a user
 router.post('/admin/setup_action', async (req, res) => {
@@ -116,19 +86,81 @@ router.post('/admin/setup_action', async (req, res) => {
 
     // check for users
     const userCount = await db.users.countDocuments({});
-    if(userCount === 0){
+    if (userCount === 0) {
         // email is ok to be used.
-        try{
+        try {
             await db.users.insertOne(doc);
             res.status(200).json({ message: 'User account inserted' });
             return;
-        }catch(ex){
+        } catch (ex) {
             console.error(colors.red('Failed to insert user: ' + ex));
             res.status(200).json({ message: 'Setup failed' });
             return;
         }
     }
     res.status(200).json({ message: 'Already setup.' });
+});
+
+const upload = multer({ dest: 'public/uploads/' });
+router.post('/admin/file/upload', upload.single('uploadFile'), async (req, res) => {
+    const db = req.app.db;
+
+    if (req.file) {
+        const file = req.file;
+
+        // Get the mime type of the file
+        const mimeType = mime.lookup(file.originalname);
+
+        // Check for allowed mime type and file size
+        if (!common.allowedMimeType.includes(mimeType) || file.size > common.fileSizeLimit) {
+            // Remove temp file
+            fs.unlinkSync(file.path);
+
+            // Return error
+            res.status(400).json({ message: 'File type not allowed or too large. Please try again.' });
+            return;
+        }
+
+        // get the product form the DB
+        const product = await db.products.findOne({ _id: common.getId(req.body.productId) });
+        if (!product) {
+            // delete the temp file.
+            fs.unlinkSync(file.path);
+
+            // Return error
+            res.status(400).json({ message: 'File upload error. Please try again.' });
+            return;
+        }
+
+        const productPath = product._id.toString();
+        const uploadDir = path.join('public/uploads', productPath);
+
+        // Check directory and create (if needed)
+        common.checkDirectorySync(uploadDir);
+
+        const source = fs.createReadStream(file.path);
+        const dest = fs.createWriteStream(path.join(uploadDir, file.originalname.replace(/ /g, '_')));
+
+        // save the new file
+        source.pipe(dest);
+        source.on('end', () => { });
+
+        // delete the temp file.
+        fs.unlinkSync(file.path);
+
+        const imagePath = path.join('/uploads', productPath, file.originalname.replace(/ /g, '_'));
+
+        // if there isn't a product featured image, set this one
+        if (!product.productImage) {
+            await db.products.updateOne({ _id: common.getId(req.body.productId) }, { $set: { productImage: imagePath } }, { multi: false });
+        }
+
+        // Return success message
+        res.status(200).json({ message: 'File uploaded successfully' });
+        return;
+    }
+    // Return error
+    res.status(400).json({ message: 'File upload error. Please try again.' });
 });
 
 module.exports = router;

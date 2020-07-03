@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import {
     Button,
     Card,
@@ -21,23 +21,31 @@ import {
     ModalFooter
 } from "reactstrap";
 import ReactQuill from 'react-quill';
+import Async from 'react-async';
 import { newProductSchema } from '../../util/schemas'
-import { productInsert } from '../../services/products/actions';
+import { getProduct } from '../../services/products/actions';
+import { adminProductAPI } from '../../services/utils';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { Typeahead } from 'react-bootstrap-typeahead';
+import axios from 'axios';
 
 var optJson = {};
-const ProductForm = ({ props: { productInsert, history } }) => {
+var initialProductState = {
+
+};
+const ProductEdit = ({ getProduct, match }) => {
     const [optList, setOptList] = useState(null);
+    const [product, setProduct] = useState();
     const [modal, setModal] = useState(false);
-    const optForm = useForm();
+
     const { control, register, watch, handleSubmit, reset, errors } = useForm({
         validationSchema: newProductSchema,
         validateCriteriaMode: "all",
         mode: "onBlur"
     });
+    const optForm = useForm();
 
     const onSubmit = async data => {
         const {
@@ -46,16 +54,23 @@ const ProductForm = ({ props: { productInsert, history } }) => {
             productSubscription, productComment,
             productTags, productDescription
         } = data;
-        productInsert(
-            productPermalink, productTitle,
-            productPrice, productDescription,
-            productPublished, productTags,
-            optList, productComment,
-            productSubscription, undefined, 
-            undefined, redirect
-        );
-        function redirect(productId) { history.push('/admin/products/edit/' + productId) };
+
+        // productInsert(productPermalink, productTitle,
+        //     productPrice, productDescription,
+        //     productPublished, productTags,
+        //     optList, productComment,
+        //     productSubscription)
     }
+
+    useEffect(() => {
+        const { params: { id } } = match;
+        getProduct(id,
+            product => {
+                setProduct(product)
+                setOptList(product.productOptions)
+            }
+        )
+    }, [])
 
     const productOptInsert = async data => {
         const { optName, optLabel, optType, optOptions } = data;
@@ -75,7 +90,7 @@ const ProductForm = ({ props: { productInsert, history } }) => {
     }
 
     const productOptRemove = async optName => {
-        delete optList[optName];
+        delete optList[optName]
         var tempList = Object.assign({}, optList);
         setOptList(tempList);
     }
@@ -95,7 +110,7 @@ const ProductForm = ({ props: { productInsert, history } }) => {
                     </Row>
                 </ListGroupItem>
             ))
-        );
+        )
     }
 
     const RenderProductOptions = () => {
@@ -138,23 +153,34 @@ const ProductForm = ({ props: { productInsert, history } }) => {
         <div className="content">
             <div className="page-header-title">
                 <h4 className="page-title">
-                    New product
+                    Edit product
                 </h4>
             </div>
             <div className="page-content-wrapper">
                 <Row>
                     <Col sm={12} md={12} lg={12} >
-                        <Card>
+                        <Card style={{ minHeight: 500 }}>
                             <CardTitle></CardTitle>
+                            {/* {
+                                product ? */}
                             <CardBody>
+                                {data => data}
                                 <Col md={12} lg={12} >
-                                    <Button
-                                        color={'outline-success'}
-                                        className="float-right"
-                                        onClick={Object.keys(errors).length > 0 ? () => { setModal(!modal) } : handleSubmit(onSubmit)}
-                                    >
-                                        Add Product
-                                    </Button>
+                                    <div className="float-right">
+                                        <Button
+                                            color={'outline-info'}
+                                            onClick={Object.keys(errors).length > 0 ? () => { setModal(!modal) } : handleSubmit(onSubmit)}
+                                        >
+                                            Upload image
+                                                </Button>
+                                        {' '}
+                                        <Button
+                                            color={'outline-success'}
+                                            onClick={Object.keys(errors).length > 0 ? () => { setModal(!modal) } : handleSubmit(onSubmit)}
+                                        >
+                                            Save Product
+                                                </Button>
+                                    </div>
                                     <br />
                                 </Col>
                                 <Col md={12} lg={12} >
@@ -162,6 +188,7 @@ const ProductForm = ({ props: { productInsert, history } }) => {
                                     <Input
                                         invalid={errors?.productTitle ? true : false}
                                         name="productTitle"
+                                        defaultValue={product?.productTitle}
                                         innerRef={register}
                                     />
                                 </Col>
@@ -175,6 +202,7 @@ const ProductForm = ({ props: { productInsert, history } }) => {
                                             invalid={errors?.productPrice ? true : false}
                                             name="productPrice"
                                             type={'number'}
+                                            defaultValue={product?.productPrice}
                                             innerRef={register}
                                         />
                                     </InputGroup>
@@ -182,7 +210,7 @@ const ProductForm = ({ props: { productInsert, history } }) => {
                                 <Col md={6} lg={6}>
                                     <label>Status</label>
                                     <FormGroup>
-                                        <Input name="productPublished" type={'select'} innerRef={register}>
+                                        <Input name="productPublished" type={'select'} innerRef={register} defaultValue={product?.productPublished}>
                                             <option value={true}>Published</option>
                                             <option value={false}>Draft</option>
                                         </Input>
@@ -190,19 +218,27 @@ const ProductForm = ({ props: { productInsert, history } }) => {
                                 </Col>
                                 <Col md={12} lg={12}>
                                     <label style={errors?.productDescription ? { color: "red" } : {}}>Product description *</label>
-                                    <Controller
-                                        as={ReactQuill}
-                                        modules={ProductCreate.modules}
-                                        formats={ProductCreate.formats}
-                                        name="productDescription"
-                                        control={control}
-                                        defaultValue=""
-                                    />
+                                    {product ?
+                                        <Controller
+                                            as={ReactQuill}
+                                            modules={ProductEdit.modules}
+                                            formats={ProductEdit.formats}
+                                            name="productDescription"
+                                            control={control}
+                                            defaultValue={product?.productDescription}
+                                        />
+                                        : null
+                                    }
                                 </Col>
                                 <Col md={12} lg={12}>
                                     <label>Permalink</label>
                                     <InputGroup>
-                                        <Input name="productPermalink" placeholder="Permalink for the article" innerRef={register} />
+                                        <Input
+                                            name="productPermalink"
+                                            placeholder="Permalink for the article"
+                                            innerRef={register}
+                                            defaultValue={product?.productPermalink}
+                                        />
                                         <InputGroupAddon addonType={'append'}>
                                             <Button color={"outline-success"}>Validate</Button>
                                         </InputGroupAddon>
@@ -217,7 +253,12 @@ const ProductForm = ({ props: { productInsert, history } }) => {
                                 </Col>
                                 <Col sm={12}>
                                     <label>Subscription Plan</label>
-                                    <Input name="productSubscription" placeholder={"plan_XXXXXXXXXXXXXX"} innerRef={register} />
+                                    <Input
+                                        name="productSubscription"
+                                        placeholder={"plan_XXXXXXXXXXXXXX"}
+                                        innerRef={register}
+                                        defaultValue={product?.productSubscription}
+                                    />
                                     <p className="form-description text-muted">
                                         First setup the plan in Stripe dashboard and enter the Plan ID. Format: plan_XXXXXXXXXXXXXX
                                     </p>
@@ -227,29 +268,39 @@ const ProductForm = ({ props: { productInsert, history } }) => {
                                     <Row>
                                         <Col>
                                             <FormGroup>
-                                                <Input name="productComment" type={'checkbox'} className="checkbox" innerRef={register} />
+                                                <Input
+                                                    name="productComment"
+                                                    type={'checkbox'}
+                                                    className="checkbox"
+                                                    innerRef={register}
+                                                    defaultValue={product?.productComment}
+                                                />
                                             </FormGroup>
                                             <p className="form-description text-muted">
                                                 Allow free form comments when adding products to cart
-                                            </p>
+                                                    </p>
                                         </Col>
                                     </Row>
                                 </Col>
                                 <Col sm={12}>
                                     <label>Product tag words</label>
-                                    {/* <Input name="productTags" innerRef={register} /> */}
-                                    <Controller
-                                        as={Typeahead}
-                                        allowNew
-                                        id="custom-selections"
-                                        multiple
-                                        newSelectionPrefix="Add tag: "
-                                        options={[]}
-                                        control={control}
-                                        placeholder="Type anything..."
-                                        onChange={([productTags]) => productTags.map(e => e.label).join(",")}
-                                        name="productTags"
-                                    />
+                                    {
+                                        product ?
+                                            <Controller
+                                                as={Typeahead}
+                                                allowNew
+                                                id="custom-selections"
+                                                multiple
+                                                newSelectionPrefix="Add tag: "
+                                                options={[]}
+                                                control={control}
+                                                placeholder="Type anything..."
+                                                onChange={([productTags]) => productTags.map(e => e.label).join(",")}
+                                                name="productTags"
+                                                defaultSelected={product?.productTags?.split(",")}
+                                            />
+                                        : null
+                                    }
                                     <p className="form-description text-muted">
                                         Tag words used to indexed products, making them easier to find and filter.
                                     </p>
@@ -292,15 +343,7 @@ const ProductForm = ({ props: { productInsert, history } }) => {
     )
 }
 
-class ProductCreate extends Component {
-    render() {
-        return (
-            <ProductForm props={this.props} />
-        );
-    }
-}
-
-ProductCreate.modules = {
+ProductEdit.modules = {
     toolbar: [
         [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
         [{ size: [] }],
@@ -311,12 +354,11 @@ ProductCreate.modules = {
         ['clean']
     ],
     clipboard: {
-        // toggle to add extra line breaks when pasting HTML:
         matchVisual: false,
     }
 }
 
-ProductCreate.formats = [
+ProductEdit.formats = [
     'header', 'font', 'size',
     'bold', 'italic', 'underline', 'strike', 'blockquote',
     'list', 'bullet', 'indent',
@@ -331,5 +373,5 @@ const mapStateToProps = state => {
 }
 
 export default withRouter(
-    connect(mapStateToProps, { productInsert })(ProductCreate)
+    connect(mapStateToProps, { getProduct })(ProductEdit)
 );

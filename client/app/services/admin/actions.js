@@ -8,17 +8,17 @@ export const checkSetup = (callback) => {
         userService.checkSetup()
             .then(
                 needSetup => {
-                    if(callback) {
+                    if (callback) {
                         callback(needSetup)
                     }
                     dispatch(request(needSetup))
                 }
             )
     }
-    function request(needSetup) { return { type: CHECK_SETUP, needSetup }}
+    function request(needSetup) { return { type: CHECK_SETUP, needSetup } }
 }
 
-export const userSetup = (usersName, userEmail, userPassword) => {
+export const userSetup = (usersName, userEmail, userPassword, cb) => {
     return async (dispatch) => {
         try {
             var res = await axios
@@ -26,7 +26,10 @@ export const userSetup = (usersName, userEmail, userPassword) => {
             dispatch({
                 type: SETUP,
                 payload: false
-            })
+            });
+            if (cb) {
+                cb();
+            }
         } catch (err) {
             // Deal with error later...
         }
@@ -34,7 +37,7 @@ export const userSetup = (usersName, userEmail, userPassword) => {
 }
 
 export const userLogin = (userEmail, password) => {
-    return  dispatch => {
+    return dispatch => {
         userService.userLogin(userEmail, password)
             .then(
                 user => {
@@ -42,13 +45,13 @@ export const userLogin = (userEmail, password) => {
                 }
             )
     }
-    function request(user) { return { type: USER_LOGIN_REQUEST , user } }
-    function extractUser(user) { 
-        return { 
+    function request(user) { return { type: USER_LOGIN_REQUEST, user } }
+    function extractUser(user) {
+        return {
             user: userEmail,
             isAdmin: user.isAdmin,
             usersName: user.usersName,
             userId: user._id
-        } 
+        }
     }
 }

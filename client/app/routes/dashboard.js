@@ -17,6 +17,7 @@ import AdminSetup from "../views/Admin/AdminSetup";
 import AdminLogin from "../views/Admin/AdminLogin";
 
 import * as Icon from 'react-feather';
+import ProductsEdit from "../views/Products/ProductsEdit";
 
 var dashRoutes = [
     {
@@ -35,7 +36,7 @@ var dashRoutes = [
         heading: "manage"
     },
     {
-        path: "/admin/products",
+        path: "/admin/products/:page([0-9])?",
         name: "Products",
         icon: ({ size, color, props }) => (
             <Icon.Tag 
@@ -154,6 +155,7 @@ var dashRoutes = [
     { isAddon: true, addonPath: "/admin/products/new", addonComponent: ProductCreate },
     { isAddon: true, addonPath: "/admin/orders/new", addonComponent: OrderCreate },
     { isAddon: true, addonPath: "/admin/users/new", addonComponent: UserCreate },
+    { isAddon: true, addonPath: "/admin/products/edit/:id", addonComponent: ProductsEdit },
     // { redirect: true, path: "/", pathTo: "/dashboard", name: "Dashboard" }
 ];
 export default dashRoutes;

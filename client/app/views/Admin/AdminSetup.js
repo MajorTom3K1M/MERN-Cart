@@ -17,8 +17,9 @@ const SetupForm = ({ props: { userSetup, history } }) => {
     const { register, watch, handleSubmit, getValues, errors } = useForm();
     const onSubmit = async data => {
         const { usersName, userEmail, userPassword, confirmPassword } = data;
-        userSetup(usersName, userEmail, userPassword);
-        history.push("/admin/login")
+        userSetup(usersName, userEmail, userPassword, () => {
+            history.push("/admin/login");
+        });
     }
     return (
         <Form onSubmit={e => e.preventDefault()}>

@@ -40,6 +40,7 @@ const CustomerProtected = ({ customerPresent, path, component: Component }) => (
 
 const UserAuth = ({ isAdmin, path, component: Component }) => (
     <Route
+        exact
         path={path}
         render={props => (
             isAdmin ?
@@ -49,16 +50,21 @@ const UserAuth = ({ isAdmin, path, component: Component }) => (
     />
 );
 
+var isUpdate = true;
 const HigherOrderSetup = OriginalComponent => {
     const Setup = (props) => {
-        const [isSetup, setSetup] = useState(null)
+        const [isSetup, setSetup] = useState(props.needSetup)
         useEffect(() => {
-            if (!props.isAdmin && props.needSetup === null && isSetup === null) {
+            if (!props.isAdmin && props.needSetup === null && isSetup === null && isUpdate) {
+                // console.log("useEffect")
+                isUpdate = false;
                 props.checkSetup((needSetup) => {
-                    setSetup(needSetup)
+                    if(needSetup !== isSetup) {
+                        setSetup(needSetup)
+                    }
                 });
             }
-        }, [isSetup]);
+        });
         return isSetup !== null || props.needSetup !== null || props.isAdmin ? <OriginalComponent isSetup={isSetup} {...props} /> : null;
     }
 
@@ -71,8 +77,9 @@ const SetupProtected = ({ isAdmin, isSetup, path, history, component: Component 
     const includesPath = (paths, searchElement) => {
         return paths.includes(searchElement)
     }
-
+    console.log(isSetup)
     if (isSetup && includesPath(["/admin/login", "/admin"], history.location.pathname)) {
+        console.log("REDIRECT")
         return (
             <Route
                 exact

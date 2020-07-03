@@ -42,6 +42,7 @@ const config = common.getConfig();
 // require the routes
 const admin = require('./routes/admin');
 const customer = require('./routes/customer');
+const product = require('./routes/product');
 const sessionRoute = require('./routes/session');
 
 // require routes
@@ -92,6 +93,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // setup the routes
 app.use('/', admin);
 app.use('/', customer);
+app.use('/', product);
 app.use('/', sessionRoute);
 
 // catch 404 and forward to error handler

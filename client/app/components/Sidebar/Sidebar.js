@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { NavLink } from "react-router-dom";
+import { NavLink, Switch } from "react-router-dom";
 import { Nav, NavItem, Collapse, Col, Row } from "reactstrap";
 
 // Icon
@@ -59,8 +59,8 @@ class Sidebar extends Component {
                             return (
                                 <NavItem key={key} >
                                     <NavLink
-                                        to={prop.path}
-                                        className={ prop.addon ? "nav-link sidebar-link-has-addon" : "nav-link" }
+                                        to={prop.path.includes(":") ? prop.path.substr(0, prop.path.indexOf(':') - 1) : prop.path}
+                                        className={prop.addon ? "nav-link sidebar-link-has-addon" : "nav-link"}
                                     >
                                         <Icon size="18px" className="icon" color="#999" />
                                         <span className="align-middle">

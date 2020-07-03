@@ -91,6 +91,10 @@ ul {
     margin: 0 !important;
 }
 
+.top-pad-8 {
+    padding-top: 8px;
+}
+
 .top-pad-10 {
     padding-top: 10px;
 }

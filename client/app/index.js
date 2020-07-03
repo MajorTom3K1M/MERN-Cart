@@ -13,12 +13,12 @@ import {
 
 import { history } from './helpers';
 
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import 'react-quill/dist/quill.bubble.css';
 import 'react-quill/dist/quill.core.css';
 import 'react-quill/dist/quill.snow.css';
 import 'codemirror/lib/codemirror.css';
 
-// imports css
 import './assets/scss/paper-dashboard.scss';
 import './assets/css/sidebar.css';
 // import './assets/css/codemirror-style.min.css';
@@ -27,10 +27,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/navbar.css';
 import './assets/css/styles.css';
 
-// routes
 import indexRoutes from './routes/index';
-import { Layout } from 'react-feather';
-
 
 const renderApp = preloadedState => {
     const store = configureStore(preloadedState);

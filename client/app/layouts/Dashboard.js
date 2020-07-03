@@ -33,11 +33,11 @@ class Dashboard extends Component {
                             if (prop.redirect) {
                                 return <Redirect from={prop.path} to={prop.pathTo} key={key} />;
                             }
-                            if (prop.isAddon) {
-                                return <UserAuthRoute exact path={prop.addonPath} component={prop.addonComponent} key={key} />
-                            }
                             if (prop.subPath) {
                                 return <UserAuthRoute exact path={prop.path} component={prop.component} key={key} />
+                            }
+                            if (prop.isAddon) {
+                                return <UserAuthRoute exact path={prop.addonPath} component={prop.addonComponent} key={key} />
                             }
                             return (
                                 <UserAuthRoute exact path={prop.path} component={prop.component} key={key} />
