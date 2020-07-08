@@ -19,12 +19,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 product: action.product
-            }
+            };
         case PRODUCT_PAGINATION_REQUEST:
             return {
                 ...state,
                 paginationData: action.paginationData
-            }
+            };
         default:
             return state;
     }

@@ -7,13 +7,13 @@ import AdminLogin from "../views/Admin/AdminLogin"
 
 var mainRoutes = [
     { 
-        path: "/", 
+        path: "/:page([0-9]*)?", 
         name: "Home", 
         component: ProductList,
         navBar: true,
     }, 
     { 
-        path: "/product/test", 
+        path: "/product/:id", 
         name: "Product", 
         component: Product,
         navBar: true , 

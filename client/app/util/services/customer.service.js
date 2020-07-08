@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { customerAPI } from '../services/utils'
+import { customerAPI } from '../../services/utils'
 
 export const customerService = {
     login

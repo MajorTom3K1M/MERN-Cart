@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { productService } from '../../util/product.service';
+import { productService } from '../../util/services/product.service';
 import { 
     PRODUCT_INSESRT_REQUEST, 
     PRODUCT_REQUEST,

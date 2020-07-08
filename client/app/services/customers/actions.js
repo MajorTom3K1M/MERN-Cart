@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { customerService } from '../../util/customer.service';
+import { customerService } from '../../util/services/customer.service';
 import { customerAPI } from '../utils'
 import { history } from '../../helpers'
 import { LOGIN_ERROR, LOGIN, LOGOUT } from './actionTypes';

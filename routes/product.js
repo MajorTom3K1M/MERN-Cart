@@ -4,6 +4,8 @@ const colors = require('colors');
 const { indexProducts } = require('../lib/indexing');
 const { validateJson } = require('../lib/schema');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 
 router.get('/admin/product/:page?', async (req, res) => {
     let pageNum = 1;
@@ -101,9 +103,10 @@ router.post('/admin/product/edit', async (req, res) => {
         }
     }
 
-    res.status(200).json(product);
+    res.status(200).json({ product, images });
+    // res.status(400).json({ message: 'Product not found' });
     return;
-})
+});
 
 router.post('/admin/product/update', async (req, res) => {
     const db = req.app.db;
@@ -218,36 +221,47 @@ router.post('/admin/product/publishedState', async (req, res) => {
 router.post('/admin/product/setasmainimage', async (req, res) => {
     const db = req.app.db;
 
+    try{
+        // update the productImage to the db
+        await db.products.updateOne({ _id: common.getId(req.body.productId) }, { $set: { productImage: req.body.productImage } }, { multi: false });
+        res.status(200).json({ message: 'Main image successfully set' });
+    }catch(ex){
+        res.status(400).json({ message: 'Unable to set as main image. Please try again.' });
+    }
+});
+
+// deletes a product image
+router.post('/admin/product/deleteimage', async (req, res) => {
+    const db = req.app.db;
+
     // get the productImage from the db
-    const product = await db.products.findOne({ _id: common.getId(req.body.product_id) });
-    if (!product) {
+    const product = await db.products.findOne({ _id: common.getId(req.body.productId) });
+    if(!product){
         res.status(400).json({ message: 'Product not found' });
         return;
     }
-    if (req.body.productImage === product.productImage) {
+    if(req.body.productImage === product.productImage){
         // set the productImage to null
-        await db.products.updateOne({ _id: common.getId(req.body.product_id) }, { $set: { productImage: null } }, { multi: false });
+        await db.products.updateOne({ _id: common.getId(req.body.productId) }, { $set: { productImage: null } }, { multi: false });
 
         // remove the image from disk
         fs.unlink(path.join('public', req.body.productImage), (err) => {
-            if (err) {
+            if(err){
                 res.status(400).json({ message: 'Image not removed, please try again.' });
-            } else {
+            }else{
                 res.status(200).json({ message: 'Image successfully deleted' });
             }
         });
-    } else {
-        // remove the image from disk
-        fs.unlink(path.join('public', req.body.productImage), (err) => {
-            if (err) {
+    }else{
+         // remove the image from disk
+         fs.unlink(path.join('public', req.body.productImage), (err) => {
+            if(err){
                 res.status(400).json({ message: 'Image not removed, please try again.' });
-            } else {
+            }else{
                 res.status(200).json({ message: 'Image successfully deleted' });
             }
         });
     }
 });
-
-
 
 module.exports = router;

@@ -15,7 +15,7 @@ import {
     ListGroupItem
 } from "reactstrap";
 import { Link } from 'react-router-dom';
-import { getPaginationData } from '../../services/products/actions';
+import { productService } from '../../util/services/product.service';
 import { connect } from 'react-redux';
 // Icon
 import { XCircle, Trash2 } from 'react-feather';
@@ -28,11 +28,22 @@ class Products extends React.Component {
     }
 
     componentDidMount() {
-        const { getPaginationData, match: { params: { page } } } = this.props;
-        getPaginationData(page, ({ results, pageNum, totalItemCount }) => {
-            // console.log(data)
-            this.setState({ product: results, pageNum, totalItemCount });
-        })
+        const { match: { params: { page } } } = this.props;
+        productService.getPaginationData(page)
+            .then(({ results, pageNum, totalItemCount }) => {
+                this.setState({ product: results, pageNum, totalItemCount });
+            });
+    }
+
+    onChecked(productId, state) {
+        productService.updatePublishedState(productId, state)
+    }
+
+    onDelete(productId, index) {
+        const { product, totalItemCount } = this.state;
+        product.splice(index, 1)
+        this.setState({ product, totalItemCount: totalItemCount - 1  });
+        productService.deleteProduct(productId);
     }
 
     render() {
@@ -62,13 +73,22 @@ class Products extends React.Component {
                                             <strong>Recent products</strong>
                                         </ListGroupItem>
                                         {
-                                            product?.map(({ _id, productTitle }, key) => (
+                                            product?.map(({ _id, productTitle, productPublished }, key) => (
                                                 <ListGroupItem key={key}>
-                                                    <button className="float-right btn text-danger btn-delete-product" style={{ paddingTop: 2, paddingBottom: 0 }}>
+                                                    <button 
+                                                        className="float-right btn text-danger btn-delete-product" 
+                                                        style={{ paddingTop: 2, paddingBottom: 0 }}
+                                                        onClick={() => this.onDelete(_id, key)}
+                                                    >
                                                         <Trash2 size={16} />
                                                     </button>
                                                     <h4 className="float-right">
-                                                        <input className="publishedState" type="checkbox" checked="" />
+                                                        <input 
+                                                            className="publishedState" 
+                                                            type="checkbox" 
+                                                            defaultChecked={productPublished} 
+                                                            onChange={({ target: { checked } }) => this.onChecked(_id,checked)} 
+                                                        />
                                                     </h4>
                                                     <div className="top-pad-8">
                                                         <Link to={`/admin/products/edit/${_id}`}>{productTitle}</Link>
@@ -76,29 +96,6 @@ class Products extends React.Component {
                                                 </ListGroupItem>
                                             ))
                                         }
-                                        <ListGroupItem>
-                                            <button className="float-right btn text-danger btn-delete-product" style={{ paddingTop: 2, paddingBottom: 0 }}>
-                                                <Trash2 size={16} />
-                                            </button>
-                                            <h4 className="float-right">
-                                                <input className="publishedState" type="checkbox" checked="" />
-                                            </h4>
-                                            <div className="top-pad-8">
-                                                <Link to="/admin/products/edit/5efc874506def42dd4aa46c0">Scout Backpack</Link>
-                                            </div>
-                                        </ListGroupItem>
-
-                                        <ListGroupItem>
-                                            <button className="float-right btn text-danger btn-delete-product" style={{ paddingTop: 2, paddingBottom: 0 }}>
-                                                <Trash2 size={16} />
-                                            </button>
-                                            <h4 className="float-right">
-                                                <input className="publishedState" type="checkbox" checked="" />
-                                            </h4>
-                                            <div className="top-pad-8">
-                                                <Link to="/admin/products/edit/5efc874506def42dd4aa46c0">Scout Backpack</Link>
-                                            </div>
-                                        </ListGroupItem>
                                     </ListGroup>
                                 </CardBody>
                                 <CardFooter></CardFooter>
@@ -111,13 +108,4 @@ class Products extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    console.log(state)
-    return {
-        customer: state.customer
-    }
-}
-
-export default connect(
-    mapStateToProps, { getPaginationData }
-)(Products);
+export default Products;

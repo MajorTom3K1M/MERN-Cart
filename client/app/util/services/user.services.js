@@ -1,18 +1,19 @@
 import axios from 'axios';
-import { adminAPI } from '../services/utils'
+import { adminAPI } from '../../services/utils'
 
 export const userService = {
     userLogin,
-    checkSetup
+    checkSetup,
+    uploadFile
 }
 
 function userLogin(email, password) {
     const requestOption = {
         method: 'POST',
         url: adminAPI + '/login',
-        data: { 
-            email, 
-            password 
+        data: {
+            email,
+            password
         }
     }
     return axios(requestOption)
@@ -31,6 +32,19 @@ function checkSetup() {
         .then(res => {
             const { data: { needSetup } } = res;
             return needSetup;
+        });
+}
+
+function uploadFile(formData) {
+    const requestOption = {
+        method: 'POST',
+        url: adminAPI + '/file/upload',
+        data: formData
+    }
+    return axios(requestOption)
+        .then(res => {
+            const { data: { message } } = res;
+            return message;
         })
 }
 

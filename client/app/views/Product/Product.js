@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { withRouter } from 'react-router-dom';
+import { productService } from '../../util/services/product.service';
+
 import {
     Col,
     Row,
@@ -12,8 +15,20 @@ import {
     ChevronRight
 } from "react-feather"
 
+var INITIAL_STATE = { product: null, images: null, relatedProducts: null };
 class Product extends Component {
+    state = INITIAL_STATE;
+    componentDidMount() {
+        const { params: { id } } = this.props.match;
+        productService.getIndividualProduct(id)
+            .then(({ product, images, relatedProducts }) => {
+                this.setState({ product, images, relatedProducts });
+                console.log(images)
+            })
+    }
+
     render() {
+        const { product, images } = this.state;
         return (
             <Col sm={12} md={{ size: 8, offset: 2 }} className="product-layout">
                 <Row>
@@ -22,30 +37,31 @@ class Product extends Component {
                             <div className="image-prev image-button">
                                 <ChevronLeft size={16} />
                             </div>
-                            <img src="https://demo.expresscart.markmoffat.com/uploads/5df73366a832c067fdf7bfd9/scout-backpack_a035275d-8975-4a05-8456-5e1ec35f020f_grande.jpg" id="product-title-image" className="product-title-image img-fluid" alt="..." />
+                            <img src={product?.productImage} id="product-title-image" className="product-title-image img-fluid" />
                             <div className="image-next image-button">
                                 <ChevronRight size={16} />
                             </div>
                         </div>
                         <Row>
-                            <Col xs={6} className="vertical-center top-pad-20">
-                                <img src="https://demo.expresscart.markmoffat.com/uploads/5df73366a832c067fdf7bfd9/Scout_Moss_Snap_grande.jpeg" className="thumbnail-image img-fluid" />
-                            </Col>
-                            <Col xs={6} className="vertical-center top-pad-20">
-                                <img src="https://demo.expresscart.markmoffat.com/uploads/5df73366a832c067fdf7bfd9/product_lifestyle-59_grande.jpeg" className="thumbnail-image img-fluid" />
-                            </Col>
-                            <Col xs={6} className="vertical-center top-pad-20">
-                                <img src="https://demo.expresscart.markmoffat.com/uploads/5df73366a832c067fdf7bfd9/scout-backpack_a035275d-8975-4a05-8456-5e1ec35f020f_grande.jpg" className="thumbnail-image img-fluid" />
-                            </Col>
+                            {
+                                images?.map((source, key) => {
+                                    if (source.productImage) return null;
+                                    return (
+                                        <Col xs={6} className="vertical-center top-pad-20" key={key}>
+                                            <img src={source.path} className="thumbnail-image img-fluid" />
+                                        </Col>
+                                    );
+                                })
+                            }
                         </Row>
                     </Col>
                     <Col sm={12} md={6} className="ml-auto">
                         <Row>
                             <Col md={10}>
-                                <h1 className="product-title text-truncate">Scout Backpack</h1>
+                                <h1 className="product-title text-truncate">{product?.productTitle}</h1>
                             </Col>
                             <Col md={10}>
-                                <h4 className="product-price mp-0">£128.00</h4>
+                                <h4 className="product-price mp-0">£{product?.productPrice}</h4>
                             </Col>
                             <Col md={10}>
                                 <h4 className="product-option">Options</h4>
@@ -75,7 +91,9 @@ class Product extends Component {
                                 <Button color={"black"} className="btn-block">Add to cart</Button>
                             </Col>
                             <Col md={10} className="body_text">
-                                <p>
+                                {/* {product?.productDescription} */}
+                                <div dangerouslySetInnerHTML={{ __html: product?.productDescription }} />
+                                {/* <p>
                                     <span style={{ lineHeight: 1.42857 }}>
                                         This durable backpack is ready for any adventure, large or small.
                                         Features adjustable and padded shoulder pads for comfort.
@@ -101,7 +119,7 @@ class Product extends Component {
                                     <li>
                                         Lifetime&amp;nbsp;Guarantee
                                     </li>
-                                </ul>
+                                </ul> */}
                             </Col>
                         </Row>
                     </Col>
@@ -196,4 +214,4 @@ class Product extends Component {
     }
 }
 
-export default Product;
+export default withRouter(Product);

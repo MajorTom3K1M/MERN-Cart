@@ -21,24 +21,23 @@ import {
     ModalFooter
 } from "reactstrap";
 import ReactQuill from 'react-quill';
-import Async from 'react-async';
 import { newProductSchema } from '../../util/schemas'
 import { getProduct } from '../../services/products/actions';
-import { adminProductAPI } from '../../services/utils';
+import { productService } from '../../util/services/product.service';
+import { userService } from '../../util/services/user.services';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { Typeahead } from 'react-bootstrap-typeahead';
-import axios from 'axios';
 
 var optJson = {};
-var initialProductState = {
-
-};
+var EMPTY_STATE = null;
 const ProductEdit = ({ getProduct, match }) => {
-    const [optList, setOptList] = useState(null);
-    const [product, setProduct] = useState();
+    const [optList, setOptList] = useState(EMPTY_STATE);
+    const [product, setProduct] = useState(EMPTY_STATE);
+    const [imagesList, setImagesList] = useState(EMPTY_STATE);
     const [modal, setModal] = useState(false);
+    const [uploadModal, setUploadModal] = useState(false);
 
     const { control, register, watch, handleSubmit, reset, errors } = useForm({
         validationSchema: newProductSchema,
@@ -46,6 +45,18 @@ const ProductEdit = ({ getProduct, match }) => {
         mode: "onBlur"
     });
     const optForm = useForm();
+    const uploadForm = useForm();
+    
+    useEffect(() => {
+        const { params: { id } } = match;
+        productService.getProduct(id)
+            .then(({ product, images }) => {
+                console.log(images)
+                setProduct(product);
+                setImagesList(images);
+                setOptList(product.productOptions);
+            })
+    }, [])
 
     const onSubmit = async data => {
         const {
@@ -54,23 +65,17 @@ const ProductEdit = ({ getProduct, match }) => {
             productSubscription, productComment,
             productTags, productDescription
         } = data;
+        const { _id: productId } = product;
 
-        // productInsert(productPermalink, productTitle,
-        //     productPrice, productDescription,
-        //     productPublished, productTags,
-        //     optList, productComment,
-        //     productSubscription)
+        productService.updateProduct(
+            productId,
+            productPermalink, productTitle,
+            productPrice, productDescription,
+            productPublished, productTags,
+            optList, productComment,
+            productSubscription
+        );
     }
-
-    useEffect(() => {
-        const { params: { id } } = match;
-        getProduct(id,
-            product => {
-                setProduct(product)
-                setOptList(product.productOptions)
-            }
-        )
-    }, [])
 
     const productOptInsert = async data => {
         const { optName, optLabel, optType, optOptions } = data;
@@ -93,6 +98,40 @@ const ProductEdit = ({ getProduct, match }) => {
         delete optList[optName]
         var tempList = Object.assign({}, optList);
         setOptList(tempList);
+    }
+
+    const onUpload = async data => {
+        const { uploadFile } = data;
+        const { _id: productId } = product;
+        var formData = new FormData();
+        formData.append('uploadFile', uploadFile[0]);
+        formData.append('productId', productId);
+        userService.uploadFile(formData)
+            .then(
+                message => {
+                    const { params: { id } } = match;
+                    productService.getProduct(id)
+                        .then(({ product, images }) => {
+                            setProduct(product);
+                            setImagesList(images);
+                            setOptList(product.productOptions);
+                            setUploadModal(!uploadModal);
+                        })
+                }
+            )
+    }
+
+    const onSetImageAsMain = (productImage) => {
+        const { _id: productId } = product;
+        productService.setAsMainImage(productId, productImage);
+    }
+
+    const onDeleteImage = (productImage, index) => {
+        const { _id: productId } = product;
+        imagesList.splice(index, 1);
+        var tempList = Object.assign([], imagesList);
+        productService.deleteImage(productId, productImage);
+        setImagesList(tempList);
     }
 
     const productOptList = () => {
@@ -165,21 +204,21 @@ const ProductEdit = ({ getProduct, match }) => {
                                 product ? */}
                             <CardBody>
                                 {data => data}
-                                <Col md={12} lg={12} >
+                                <Col md={12} lg={12} style={{ zIndex: 1000 }}>
                                     <div className="float-right">
                                         <Button
                                             color={'outline-info'}
-                                            onClick={Object.keys(errors).length > 0 ? () => { setModal(!modal) } : handleSubmit(onSubmit)}
+                                            onClick={() => setUploadModal(!uploadModal)}
                                         >
                                             Upload image
-                                                </Button>
+                                        </Button>
                                         {' '}
                                         <Button
                                             color={'outline-success'}
                                             onClick={Object.keys(errors).length > 0 ? () => { setModal(!modal) } : handleSubmit(onSubmit)}
                                         >
                                             Save Product
-                                                </Button>
+                                        </Button>
                                     </div>
                                     <br />
                                 </Col>
@@ -278,7 +317,7 @@ const ProductEdit = ({ getProduct, match }) => {
                                             </FormGroup>
                                             <p className="form-description text-muted">
                                                 Allow free form comments when adding products to cart
-                                                    </p>
+                                            </p>
                                         </Col>
                                     </Row>
                                 </Col>
@@ -295,15 +334,45 @@ const ProductEdit = ({ getProduct, match }) => {
                                                 options={[]}
                                                 control={control}
                                                 placeholder="Type anything..."
-                                                onChange={([productTags]) => productTags.map(e => e.label).join(",")}
+                                                onChange={([productTags]) => productTags.map(e => (e.label ? e.label : e)).join(",")}
                                                 name="productTags"
-                                                defaultSelected={product?.productTags?.split(",")}
+                                                defaultSelected={product?.productTags ? product?.productTags?.split(",") : []}
+                                                defaultValue={product?.productTags ? product?.productTags?.split(",") : ""}
                                             />
-                                        : null
+                                            : null
                                     }
                                     <p className="form-description text-muted">
                                         Tag words used to indexed products, making them easier to find and filter.
                                     </p>
+                                </Col>
+                                <Col sm={12}>
+                                    <div className="product-images">
+                                        <h2>Product images</h2>
+                                        <Row>
+                                            {
+                                                imagesList?.length > 0 ?
+                                                    imagesList?.map((source, key) => (
+                                                        <Col sm={3} key={key}>
+                                                            <p>
+                                                                <Button 
+                                                                    color={'outline-danger'}
+                                                                    onClick={() => onDeleteImage(source.path, key)} 
+                                                                >
+                                                                    Delete
+                                                                </Button>{' '}
+                                                                <Button 
+                                                                    color={'outline-success'}
+                                                                    onClick={() => onSetImageAsMain(source.path)} 
+                                                                >
+                                                                    Set as main image
+                                                                </Button>
+                                                            </p>
+                                                            <img src={source?.path} className="img-fluid" />
+                                                        </Col>
+                                                    )) : <Col sm={12}><h4 className="text-warning">No images have been uploaded for this product</h4></Col>
+                                            }
+                                        </Row>
+                                    </div>
                                 </Col>
                             </CardBody>
                             <CardFooter></CardFooter>
@@ -311,6 +380,43 @@ const ProductEdit = ({ getProduct, match }) => {
                     </Col>
                 </Row>
             </div>
+
+            {/* Modal Change Later */}
+
+            <Modal
+                isOpen={uploadModal}
+                toggle={() => setUploadModal(!uploadModal)}
+                size={'md'}
+            >
+                <ModalHeader
+                    className="float-right"
+                    toggle={() => setUploadModal(!uploadModal)}
+                >
+                    Product image upload
+                </ModalHeader>
+                <ModalBody>
+                    <div className="btn btn-outline-info btn-file file-upload-wrapper">
+                        Select file <input name="uploadFile" type="file" className="custom-file-input" ref={uploadForm.register} />
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <button
+                        type="button"
+                        className="btn btn-default"
+                        onClick={() => setUploadModal(!uploadModal)}
+                    >
+                        Cancel
+                    </button>
+                    <Button
+                        className="btn-black"
+                        onClick={uploadForm.handleSubmit(onUpload)}
+                    >
+                        Upload
+                    </Button>
+                </ModalFooter>
+            </Modal>
+
+            {/* Modal Change Later */}
 
             {/* Modal Change Later */}
 
@@ -325,7 +431,7 @@ const ProductEdit = ({ getProduct, match }) => {
                         Object.keys(errors).map((name, key) => {
                             if (errors[name]) {
                                 return (
-                                    <p> {name} - <span className="text-danger">{errors[name]?.message}</span></p>
+                                    <p key={key}> {name} - <span className="text-danger">{errors[name]?.message}</span></p>
                                 )
                             }
                         })

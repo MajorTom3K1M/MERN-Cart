@@ -147,7 +147,7 @@ const ProductForm = ({ props: { productInsert, history } }) => {
                         <Card>
                             <CardTitle></CardTitle>
                             <CardBody>
-                                <Col md={12} lg={12} >
+                                <Col md={12} lg={12} style={ { zIndex: 1000 } }>
                                     <Button
                                         color={'outline-success'}
                                         className="float-right"

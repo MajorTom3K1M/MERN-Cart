@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { userService } from '../../util/user.services';
+import { userService } from '../../util/services/user.services';
 import { adminAPI } from '../utils'
 import { CHECK_SETUP, SETUP, USER_LOGIN_REQUEST } from './actionTypes';
 
