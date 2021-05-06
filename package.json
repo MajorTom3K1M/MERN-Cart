@@ -83,7 +83,7 @@
     "redux-form": "^8.3.2",
     "redux-thunk": "^2.3.0",
     "regenerator-runtime": "^0.13.5",
-    "sanitize-html": "^1.21.1",
+    "sanitize-html": "^2.3.2",
     "sass": "^1.25.0",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
