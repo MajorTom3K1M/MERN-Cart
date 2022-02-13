@@ -14,7 +14,7 @@
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.0.0-beta.42",
     "@babel/preset-react": "^7.0.0-beta.42",
-    "ajv": "^6.11.0",
+    "ajv": "^6.12.3",
     "array-move": "^2.2.1",
     "async": "^3.1.1",
     "autoprefixer": "^8.2.0",
