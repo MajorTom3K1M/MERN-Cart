@@ -52,7 +52,7 @@
     "lunr": "^2.3.8",
     "mime-type": "^3.0.7",
     "mkdirp": "^1.0.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongodb": "^3.5.3",
     "mongodb-uri": "^0.9.7",
     "morgan": "^1.9.1",
