@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  merncart:
+    container_name: merncart
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - MONGODB=mongodb://mongo_user:mongo_password@mongocart:27017/merncart?authSource=admin
+      - PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongocart
+
+  mongocart:
+    container_name: mongocart
+    image: mongo
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo_user
+      - MONGO_INITDB_ROOT_PASSWORD=mongo_password
+      - MONGO_INITDB_DATABASE=merncart
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+volumes:
+  mongo_data:

@@ -1,4 +1,5 @@
-const webpack = require('webpack');
+// const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 const merge = require('webpack-merge');
 
 const helpers = require('./helpers');
@@ -12,15 +13,32 @@ module.exports = merge(commonConfig, {
     chunkFilename: '[id].[hash].chunk.js'
   },
 
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false,
-        screw_ie8: true
-      },
-      output: {
-        comments: false
-      }
-    })
-  ]
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            warnings: false,
+            drop_console: true, // Remove console.logs
+            drop_debugger: true,
+          },
+          output: {
+            comments: false, // Remove comments
+          },
+        },
+      }),
+    ],
+  },
+  // plugins: [
+  //   new webpack.optimize.UglifyJsPlugin({
+  //     compressor: {
+  //       warnings: false,
+  //       screw_ie8: true
+  //     },
+  //     output: {
+  //       comments: false
+  //     }
+  //   })
+  // ]
 });

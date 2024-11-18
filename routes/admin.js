@@ -143,10 +143,10 @@ router.post('/admin/file/upload', upload.single('uploadFile'), async (req, res) 
 
         // save the new file
         source.pipe(dest);
-        source.on('end', () => { });
-
-        // delete the temp file.
-        fs.unlinkSync(file.path);
+        source.on('end', () => { 
+            // delete the temp file.
+            fs.unlinkSync(file.path);
+        });
 
         const imagePath = path.join('/uploads', productPath, file.originalname.replace(/ /g, '_'));
 

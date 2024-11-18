@@ -132,7 +132,7 @@ class Product extends Component {
                                 <div className="product-wrapper">
                                     <a href="/product/duckworth-jacket">
                                         <div className="vertical-center img-thumbnail">
-                                            <img className="img-fluid" src="https://demo.expresscart.markmoffat.com/uploads/5df73366a832c067fdf7bfd5/woolfill-jacket_6c39ae23-c0c8-4821-85f4-4b5d64333c62_grande.jpg" alt="..." />
+                                            <img className="img-fluid" src="/uploads/673b29460b48bb52f07adec3/woolfill-jacket_6c39ae23-c0c8-4821-85f4-4b5d64333c62_grande.jpg" alt="..." />
                                         </div>
                                         <h3 className="product-title product-title-home top-pad-10">
                                             Duckworth Woolfill Jacket
@@ -152,7 +152,7 @@ class Product extends Component {
                                 <div className="product-wrapper">
                                     <a href="/product/duckworth-jacket">
                                         <div className="vertical-center img-thumbnail">
-                                            <img className="img-fluid" src="https://demo.expresscart.markmoffat.com/uploads/5df73366a832c067fdf7bfd6/5-panel-hat_4ee20a27-8d5a-490e-a2fc-1f9c3beb7bf5_grande.jpg" alt="..." />
+                                            <img className="img-fluid" src="/uploads/673b2a1d0b48bb52f07adec4/5-panel-hat_4ee20a27-8d5a-490e-a2fc-1f9c3beb7bf5_grande.jpg" alt="..." />
                                         </div>
                                         <h3 className="product-title product-title-home top-pad-10">
                                             5 Panel Camp Cap
@@ -172,7 +172,7 @@ class Product extends Component {
                                 <div className="product-wrapper">
                                     <a href="/product/duckworth-jacket">
                                         <div className="vertical-center img-thumbnail">
-                                            <img className="img-fluid" src="https://demo.expresscart.markmoffat.com/uploads/5df73366a832c067fdf7bfda/hudderton-backpack_dc8afb13-448b-49d9-a042-5a163a97de8f_590x.jpg" alt="..." />
+                                            <img className="img-fluid" src="/uploads/673a104ff05f77dd96eeda3d/scout-backpack_a035275d-8975-4a05-8456-5e1ec35f020f_grande.jpg" alt="..." />
                                         </div>
                                         <h3 className="product-title product-title-home top-pad-10">
                                             Hudderton Backpack
@@ -192,7 +192,7 @@ class Product extends Component {
                                 <div className="product-wrapper">
                                     <a href="/product/duckworth-jacket">
                                         <div className="vertical-center img-thumbnail">
-                                            <img className="img-fluid" src="https://demo.expresscart.markmoffat.com/uploads/5df73366a832c067fdf7bfdb/chambray_5f232530-4331-492a-872c-81c225d6bafd_590x.jpg" alt="..." />
+                                            <img className="img-fluid" src="/uploads/673b2b900b48bb52f07adec6/chambray_5f232530-4331-492a-872c-81c225d6bafd_590x.jpg" alt="..." />
                                         </div>
                                         <h3 className="product-title product-title-home top-pad-10">
                                             Ayres Chambray
