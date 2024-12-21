@@ -8,24 +8,31 @@ services:
     environment:
       - NODE_ENV=development
       - MONGODB=mongodb://mongo_user:mongo_password@mongocart:27017/merncart?authSource=admin
-      - PORT=3001
+      - PORT=3005
     ports:
-      - "3001:3001"
+      - "3005:3005"
     depends_on:
       - mongocart
+    networks:
+      - merncart-network
 
   mongocart:
     container_name: mongocart
     image: mongo
     ports:
-      - '27017:27017'
+      - '27018:27017'
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo_user
       - MONGO_INITDB_ROOT_PASSWORD=mongo_password
       - MONGO_INITDB_DATABASE=merncart
     volumes:
-      - mongo_data:/data/db
+      - mongo_data_cart:/data/db
     restart: always
+    networks:
+      - merncart-network
+
+networks:
+  merncart-network:
 
 volumes:
-  mongo_data:
+  mongo_data_cart:

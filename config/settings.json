@@ -2,7 +2,7 @@
     "cartTitle": "TEST",
     "cartDescription": "expressCart",
     "cartLogo": "",
-    "baseUrl": "http://localhost:3000",
+    "baseUrl": "http://localhost:3005",
     "emailHost": "smtp-mail.outlook.com",
     "emailPort": 587,
     "emailSecure": false,
@@ -42,7 +42,7 @@
             "discount": {}
         }
     },
-    "port": 3000,
+    "port": 3005,
     "secretCookie": "df2fe02cd5c05abf90d666eb9b01b12f15a2d566",
     "secretSession": "70d9f3c8b218454a64beb3b90e20594ee9f56799",
     "themeViews": "../views/themes/Cloth/",
