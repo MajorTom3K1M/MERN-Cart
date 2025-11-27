@@ -1,0 +1,2 @@
+# Exclude SCSS files from GitHub language statistics
+client/app/assets/scss/*.scss linguist-vendored
